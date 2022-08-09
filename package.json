@@ -1,9 +1,9 @@
 {
-  "name": "react-project-template",
+  "name": "river-level-seoul",
   "version": "1.0.0",
-  "description": "Templates for creating React projects.",
+  "description": "서울 열린데이터 광장에서 제공하는 OpenAPI '서울시 하천 수위 현황'의 시각화 서비스",
   "main": "src/index.tsx",
-  "repository": "https://github.com/skymins04/react-project-template.git",
+  "repository": "https://github.com/skymins04/river-level-seoul.git",
   "author": "skymins04 <skymin0417@gmail.com>",
   "license": "MIT",
   "scripts": {
@@ -14,8 +14,12 @@
     "format": "prettier --write \"./src/**/*.{js,jsx,ts,tsx,json,md}\""
   },
   "dependencies": {
+    "i18next": "^21.9.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-i18next": "^11.18.3",
+    "react-responsive": "^9.0.0-beta.10",
+    "react-router-dom": "^6.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.18.10",
@@ -26,8 +30,12 @@
     "@babel/runtime": "^7.18.9",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.7",
     "@svgr/webpack": "^6.3.1",
+    "@types/i18next": "^13.0.0",
     "@types/react": "^18.0.16",
     "@types/react-dom": "^18.0.6",
+    "@types/react-i18next": "^8.1.0",
+    "@types/react-responsive": "^8.0.5",
+    "@types/react-router-dom": "^5.3.3",
     "@typescript-eslint/eslint-plugin": "^5.32.0",
     "@typescript-eslint/parser": "^5.32.0",
     "babel-loader": "^8.2.5",
@@ -35,6 +43,7 @@
     "dotenv": "^16.0.1",
     "eslint": "^8.21.0",
     "eslint-config-prettier": "^8.5.0",
+    "eslint-import-resolver-webpack": "^0.13.2",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-jsx-a11y": "^6.6.1",
     "eslint-plugin-prettier": "^4.2.1",

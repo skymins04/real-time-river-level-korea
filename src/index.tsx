@@ -1,11 +1,23 @@
 import { StrictMode } from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import ReactDOM from "react-dom";
+
+import { initI18n } from "@i18n";
+import ResponsiveLayout from "./layouts/responsive.layout";
 import App from "./App";
 import "./style.scss";
 
+initI18n();
+
 ReactDOM.render(
   <StrictMode>
-    <App />
+    <BrowserRouter>
+      <ResponsiveLayout>
+        <Routes>
+          <Route path="/" element={<App />} />
+        </Routes>
+      </ResponsiveLayout>
+    </BrowserRouter>
   </StrictMode>,
   document.getElementById("root"),
 );

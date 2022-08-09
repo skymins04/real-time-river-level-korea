@@ -11,6 +11,11 @@ module.exports = {
     react: {
       version: "detect",
     },
+    "import/resolver": {
+      webpack: {
+        config: "webpack.common.js",
+      },
+    },
   },
   extends: [
     "plugin:react/recommended",
