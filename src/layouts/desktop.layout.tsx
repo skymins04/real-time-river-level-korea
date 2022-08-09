@@ -15,7 +15,9 @@ const DesktopLayout = (props: PropsWithChildren) => {
           height: "auto",
         }}
       >
-        <div style={{ width: "100%", height: "100%", marginTop: "1rem" }}>{props.children}</div>
+        <div style={{ width: "100%", height: "100%", padding: "var(--pd)", marginTop: "1rem" }}>
+          {props.children}
+        </div>
       </div>
     </div>
   );

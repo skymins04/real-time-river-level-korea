@@ -1,0 +1,26 @@
+.widget-block {
+  position: relative;
+  width: 100%;
+  padding: var(--pd);
+  border-radius: 10px;
+  box-shadow: 0 0 10px #ccc;
+
+  .widget-title {
+    position: relative;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 5px;
+
+    .icon {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 16px;
+    }
+
+    .text {
+      font-size: 16px;
+    }
+  }
+}
