@@ -1,6 +1,7 @@
 import { PropsWithChildren } from "react";
 
 import Header from "@Component/Header";
+import Footer from "@Component/Footer";
 
 const MobileLayout = (props: PropsWithChildren) => {
   return (
@@ -10,6 +11,7 @@ const MobileLayout = (props: PropsWithChildren) => {
         style={{
           display: "flex",
           justifyContent: "center",
+          flexDirection: "column",
           maxWidth: "1170px",
           padding: "var(--pd)",
           margin: "auto",
@@ -19,6 +21,7 @@ const MobileLayout = (props: PropsWithChildren) => {
       >
         {props.children}
       </div>
+      <Footer />
     </div>
   );
 };

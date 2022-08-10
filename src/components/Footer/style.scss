@@ -1,0 +1,34 @@
+.footer {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  height: max-content;
+  padding: var(--pd);
+  background-color: #121212;
+
+  .footer-content {
+    color: white;
+    font-size: 14px;
+
+    a {
+      margin-left: 0.5em;
+      text-decoration: none;
+      color: white;
+      transition: 0.2s;
+    }
+    a:visited {
+      color: white;
+    }
+    a:hover {
+      color: rgb(148, 174, 255);
+    }
+  }
+
+  .footer-copyright {
+    margin-top: 1em;
+    font-size: 14px;
+  }
+}

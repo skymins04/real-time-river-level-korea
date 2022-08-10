@@ -1,5 +1,13 @@
 @import url(//fonts.googleapis.com/earlyaccess/notosanskr.css);
 
+@keyframes fade-in-opacity {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
 .notosanskr * {
   font-family: "Noto Sans KR", sans-serif;
 }
@@ -20,4 +28,9 @@ body {
   padding: 0;
   width: 100%;
   height: 100%;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  background-color: #eee;
 }

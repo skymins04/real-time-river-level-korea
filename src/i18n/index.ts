@@ -11,7 +11,7 @@ export const initI18n = () => {
     },
     lng: "ko",
     fallbackLng: "ko",
-    ns: ["header"],
+    ns: ["header", "footer", "article", "region"],
     interpolation: {
       escapeValue: false,
     },

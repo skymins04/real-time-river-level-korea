@@ -1,0 +1,30 @@
+.map svg {
+  display: block;
+  height: max-content;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 0;
+  overflow: visible;
+  animation: fade-in-opacity 0.5s ease-in-out;
+}
+
+.map svg path {
+  stroke: #fff;
+  stroke-width: 5px;
+  transition: 0.2s;
+  transform-origin: center center;
+}
+.map svg path.no-data {
+  fill: #eee !important;
+}
+
+.map svg path:hover {
+  // fill: #ccc !important;
+  cursor: pointer;
+  filter: drop-shadow(0 0 5px #666);
+}
+
+.map svg text {
+  text-anchor: middle;
+}

@@ -12,7 +12,7 @@ const Header = () => {
           <div className="icon">
             <FontAwesomeIcon icon={faChartLine} />
           </div>
-          <div className="text">{t("header:PAGE_MAIN_TITLE")}</div>
+          <div className="text">{t("header:HEADER_TITLE")}</div>
         </div>
       </div>
     </>

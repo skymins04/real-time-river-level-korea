@@ -2,11 +2,12 @@
   position: relative;
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   width: 100%;
-  height: 100px;
+  height: 300px;
   padding: 0 var(--pd);
-  background-color: #eee;
+  margin-bottom: -90px;
+  background-color: #2f2f2f;
 
   .header-title {
     position: relative;
@@ -14,6 +15,7 @@
     justify-content: flex-start;
     align-items: center;
     gap: 5px;
+    margin-top: 30px;
 
     .icon {
       display: flex;
@@ -22,11 +24,16 @@
       font-size: 24px;
       height: 1em;
       padding-top: 0.15em;
+
+      svg path {
+        fill: white !important;
+      }
     }
 
     .text {
       font-size: 24px;
       font-weight: bolder;
+      color: white;
     }
   }
 }

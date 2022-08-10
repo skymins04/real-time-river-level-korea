@@ -1,6 +1,7 @@
 import { PropsWithChildren } from "react";
 
 import Header from "@Component/Header";
+import Footer from "@Component/Footer";
 
 const DesktopLayout = (props: PropsWithChildren) => {
   return (
@@ -19,6 +20,7 @@ const DesktopLayout = (props: PropsWithChildren) => {
           {props.children}
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

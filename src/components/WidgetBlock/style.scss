@@ -2,8 +2,10 @@
   position: relative;
   width: 100%;
   padding: var(--pd);
+  border: 1px solid #ddd;
   border-radius: 10px;
-  box-shadow: 0 0 10px #ccc;
+  // box-shadow: 0 0 10px #aaa;
+  background-color: white;
 
   .widget-title {
     position: relative;
