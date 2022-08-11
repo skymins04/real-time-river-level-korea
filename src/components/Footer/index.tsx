@@ -18,6 +18,9 @@ const Footer = () => {
           ({t("footer:FOOTER_SITE_LINK")})
         </a>
       </div>
+      <div className="footer-content">
+        👨‍💻 Project by Kang Min-su (BetaMan, skymin0417@gmail.com)
+      </div>
       <div className="footer-content footer-copyright">© 2022 {t("header:HEADER_TITLE")}</div>
     </div>
   );

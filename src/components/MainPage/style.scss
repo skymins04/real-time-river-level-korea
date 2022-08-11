@@ -1,0 +1,16 @@
+.sub-articles {
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: flex-start;
+  gap: var(--pd);
+  margin-top: var(--pd);
+}
+
+@media (max-width: 767px) {
+  .sub-articles {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+}

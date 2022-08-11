@@ -25,13 +25,19 @@ interface RiverLevelSeoulDataRow {
 }
 
 interface Regions {
-  [guName: string]: {
-    target: Ref<SVGPathElement>;
-    riverLevel: Array<RiverLevel>;
-  };
+  [guName: string]: Region;
+}
+
+interface Region {
+  guName: string;
+  target: Ref<SVGPathElement>;
+  riverLevel: Array<RiverLevel>;
+  averageRiverLevelRatio: number | null;
 }
 
 interface RiverLevel {
+  riverName: string;
+  rivergaugeName: string;
   currentLevel: number;
   planfloodLevel: number;
   riverLevelRatio: number;

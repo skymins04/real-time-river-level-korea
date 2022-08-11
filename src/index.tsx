@@ -4,7 +4,7 @@ import ReactDOM from "react-dom";
 
 import { initI18n } from "@i18n";
 import ResponsiveLayout from "./layouts/responsive.layout";
-import MainPage from "./MainPage";
+import MainPage from "@Component/MainPage";
 import "./style.scss";
 
 initI18n();

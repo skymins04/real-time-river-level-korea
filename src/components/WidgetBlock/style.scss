@@ -13,16 +13,50 @@
     justify-content: flex-start;
     align-items: center;
     gap: 5px;
+    margin-bottom: var(--pd);
 
     .icon {
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 16px;
+      width: 32px;
+      height: 32px;
+      font-size: 32px;
+      margin-right: 5px;
+    }
+    .icon:empty {
+      background-color: red;
     }
 
     .text {
-      font-size: 16px;
+      font-size: 24px;
+    }
+  }
+
+  .widget-content {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--pd);
+  }
+}
+
+@media (max-width: 767px) {
+  .widget-block {
+    .widget-title {
+      .icon {
+        width: 20px;
+        height: 20px;
+        font-size: 20px;
+      }
+      .text {
+        font-size: 16px;
+      }
+    }
+    .widget-content {
+      align-items: center;
+      flex-direction: column;
     }
   }
 }

@@ -1,0 +1,43 @@
+.popup-region-info {
+  position: fixed;
+  background-color: white;
+  pointer-events: none;
+  padding: 10px;
+  border: 1px solid black;
+  z-index: 1000;
+  transform: translate(-100%, -50%);
+
+  .region-name {
+    margin-bottom: 5px;
+  }
+
+  .average-river-level-ratio {
+    margin-bottom: 10px;
+  }
+
+  .region-river-data-content {
+    font-size: 12px;
+    padding-left: 5px;
+
+    div {
+      display: inline-block;
+    }
+
+    .title {
+      margin-right: 5px;
+    }
+  }
+
+  .region-river-data {
+    font-size: 12px;
+
+    .region-river-name {
+    }
+    .region-river-current-level {
+    }
+    .region-river-planflood-level {
+    }
+    .region-river-level-ratio {
+    }
+  }
+}
