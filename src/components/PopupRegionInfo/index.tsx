@@ -1,4 +1,6 @@
+import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
+
 import "./style.scss";
 
 interface PopupRegionInfoProps {
@@ -9,12 +11,25 @@ interface PopupRegionInfoProps {
 
 const PopupRegionInfo = ({ region, mouseX, mouseY }: PopupRegionInfoProps) => {
   const { t } = useTranslation(["article", "region"]);
+  const popupElement = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const parent = popupElement.current?.parentElement;
+    if (parent) {
+      if (mouseX <= parent.clientWidth / 2) {
+        popupElement.current.style.transform = "translate(15px, -50%)";
+      } else {
+        popupElement.current.style.transform = "translate(calc(-100% - 15px), -50%)";
+      }
+    }
+  }, [mouseX]);
 
   return (
     <div
       className="popup-region-info"
+      ref={popupElement}
       style={{
-        left: `${mouseX - 15}px`,
+        left: `${mouseX}px`,
         top: `${mouseY}px`,
       }}
     >

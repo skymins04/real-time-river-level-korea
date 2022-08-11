@@ -2,10 +2,12 @@
   position: fixed;
   background-color: white;
   pointer-events: none;
+  width: max-content;
   padding: 10px;
-  border: 1px solid black;
+  border: 1px solid #666;
+  border-radius: 10px;
+  // box-shadow: 0 0 5px #666;
   z-index: 1000;
-  transform: translate(-100%, -50%);
 
   .region-name {
     margin-bottom: 5px;
@@ -29,9 +31,15 @@
   }
 
   .region-river-data {
-    font-size: 12px;
+    padding: 5px;
+    border-bottom: 1px solid #ccc;
+
+    &:last-child {
+      border-bottom: none;
+    }
 
     .region-river-name {
+      font-size: 14px;
     }
     .region-river-current-level {
     }
@@ -39,5 +47,15 @@
     }
     .region-river-level-ratio {
     }
+  }
+}
+
+@media (max-width: 767px) {
+  .popup-region-info {
+    left: auto !important;
+    top: auto !important;
+    right: 10px !important;
+    bottom: 10px !important;
+    transform: translate(0, 0) !important;
   }
 }

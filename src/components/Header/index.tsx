@@ -28,8 +28,8 @@ const Header = () => {
           <div className="text">{t("header:HEADER_TITLE")}</div>
         </div>
         <div className="lang-select-area">
-          Langauge :
           <select id="lang-select" onChange={selectLanguage}>
+            <option>Langauge</option>
             <option value="ko">한국어</option>
             <option value="en">English</option>
           </select>

@@ -7,7 +7,130 @@
   margin-top: var(--pd);
 }
 
+.info {
+  animation: fade-in-opacity 0.4s ease-in-out;
+}
+
+@media (min-width: 768px) {
+  .widget-block .info {
+    display: block;
+    position: relative;
+    width: max-content;
+    height: 100%;
+  }
+  .info-color-riverlevel {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    .icon {
+      background: linear-gradient(180deg, rgba(60, 95, 255, 1) 0%, rgba(60, 95, 255, 0.3) 100%);
+      width: 1em;
+      height: 4em;
+      margin: 0.2em 0;
+      border-radius: 0.2em;
+    }
+
+    .title {
+      word-break: keep-all;
+      text-align: center;
+      max-width: 100%;
+      font-size: 12px;
+      margin-top: 10px;
+    }
+  }
+  .info-color-no-data {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    margin-top: var(--pd);
+
+    .icon {
+      width: 1em;
+      height: 1em;
+      background-color: #eee;
+      border: 1px solid #ccc;
+      border-radius: 0.2em;
+    }
+
+    .title {
+      word-break: keep-all;
+      max-width: 100%;
+      font-size: 12px;
+      text-align: center;
+      margin-top: 10px;
+    }
+  }
+}
+
 @media (max-width: 767px) {
+  .widget-block .info {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: max-content;
+
+    .info-color {
+      width: 100%;
+      max-width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+  }
+  .info-color-riverlevel {
+    position: relative;
+    width: max-content;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row-reverse;
+
+    .icon {
+      background: linear-gradient(-90deg, rgba(60, 95, 255, 1) 0%, rgba(60, 95, 255, 0.3) 100%);
+      width: 4em;
+      height: 1em;
+      margin: 0 0.2em;
+      border-radius: 0.2em;
+    }
+
+    .title {
+      text-align: center;
+      white-space: nowrap;
+      font-size: 12px;
+      margin-right: 10px;
+    }
+  }
+  .info-color-no-data {
+    position: relative;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row-reverse;
+    width: max-content;
+
+    .icon {
+      width: 1em;
+      height: 1em;
+      background-color: #eee;
+      border: 1px solid #ccc;
+      border-radius: 0.2em;
+    }
+
+    .title {
+      word-break: keep-all;
+      max-width: 100%;
+      margin-right: 10px;
+      font-size: 12px;
+      text-align: center;
+    }
+  }
   .sub-articles {
     flex-direction: column;
     justify-content: center;

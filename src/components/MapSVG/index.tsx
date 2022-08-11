@@ -1,28 +1,16 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
+import { useMouseMove } from "@Hook";
 import PopupRegionInfo from "@Component/PopupRegionInfo";
+import { seoulRegions } from "@Lib/regions";
 
 import "./style.scss";
 
 interface MapSVGProps {
   type: "seoul";
-  riverData: RiverLevelSeoulAPIResonse | null;
+  riverData: RiverLevelSeoulAPIResonse;
 }
-
-const useMouseMove = () => {
-  const [state, setState] = useState({ x: 0, y: 0 });
-
-  const handler = (e: any) => {
-    e.persist();
-    setState(state => ({ ...state, x: e.clientX, y: e.clientY }));
-  };
-  return {
-    x: state.x,
-    y: state.y,
-    handler,
-  };
-};
 
 const MapSVG = ({ type, riverData }: MapSVGProps) => {
   const [mouseoveredRegionStore, setMouseoveredRegion] = useState<Region | null>(null);
@@ -30,212 +18,61 @@ const MapSVG = ({ type, riverData }: MapSVGProps) => {
 
   const { t } = useTranslation(["region"]);
 
-  const seoulRegions: Regions = {
-    강동구: {
-      guName: "강동구",
-      target: useRef<SVGPathElement>(null),
-      riverLevel: [],
-      averageRiverLevelRatio: null,
-    },
-    송파구: {
-      guName: "송파구",
-      target: useRef<SVGPathElement>(null),
-      riverLevel: [],
-      averageRiverLevelRatio: null,
-    },
-    강남구: {
-      guName: "강남구",
-      target: useRef<SVGPathElement>(null),
-      riverLevel: [],
-      averageRiverLevelRatio: null,
-    },
-    서초구: {
-      guName: "서초구",
-      target: useRef<SVGPathElement>(null),
-      riverLevel: [],
-      averageRiverLevelRatio: null,
-    },
-    관악구: {
-      guName: "관악구",
-      target: useRef<SVGPathElement>(null),
-      riverLevel: [],
-      averageRiverLevelRatio: null,
-    },
-    동작구: {
-      guName: "동작구",
-      target: useRef<SVGPathElement>(null),
-      riverLevel: [],
-      averageRiverLevelRatio: null,
-    },
-    영등포구: {
-      guName: "영등포구",
-      target: useRef<SVGPathElement>(null),
-      riverLevel: [],
-      averageRiverLevelRatio: null,
-    },
-    금천구: {
-      guName: "금천구",
-      target: useRef<SVGPathElement>(null),
-      riverLevel: [],
-      averageRiverLevelRatio: null,
-    },
-    구로구: {
-      guName: "구로구",
-      target: useRef<SVGPathElement>(null),
-      riverLevel: [],
-      averageRiverLevelRatio: null,
-    },
-    강서구: {
-      guName: "강서구",
-      target: useRef<SVGPathElement>(null),
-      riverLevel: [],
-      averageRiverLevelRatio: null,
-    },
-    양천구: {
-      guName: "양천구",
-      target: useRef<SVGPathElement>(null),
-      riverLevel: [],
-      averageRiverLevelRatio: null,
-    },
-    마포구: {
-      guName: "마포구",
-      target: useRef<SVGPathElement>(null),
-      riverLevel: [],
-      averageRiverLevelRatio: null,
-    },
-    서대문구: {
-      guName: "서대문구",
-      target: useRef<SVGPathElement>(null),
-      riverLevel: [],
-      averageRiverLevelRatio: null,
-    },
-    은평구: {
-      guName: "은평구",
-      target: useRef<SVGPathElement>(null),
-      riverLevel: [],
-      averageRiverLevelRatio: null,
-    },
-    노원구: {
-      guName: "노원구",
-      target: useRef<SVGPathElement>(null),
-      riverLevel: [],
-      averageRiverLevelRatio: null,
-    },
-    도봉구: {
-      guName: "도봉구",
-      target: useRef<SVGPathElement>(null),
-      riverLevel: [],
-      averageRiverLevelRatio: null,
-    },
-    강북구: {
-      guName: "강북구",
-      target: useRef<SVGPathElement>(null),
-      riverLevel: [],
-      averageRiverLevelRatio: null,
-    },
-    성북구: {
-      guName: "성북구",
-      target: useRef<SVGPathElement>(null),
-      riverLevel: [],
-      averageRiverLevelRatio: null,
-    },
-    중량구: {
-      guName: "중량구",
-      target: useRef<SVGPathElement>(null),
-      riverLevel: [],
-      averageRiverLevelRatio: null,
-    },
-    동대문구: {
-      guName: "동대문구",
-      target: useRef<SVGPathElement>(null),
-      riverLevel: [],
-      averageRiverLevelRatio: null,
-    },
-    광진구: {
-      guName: "광진구",
-      target: useRef<SVGPathElement>(null),
-      riverLevel: [],
-      averageRiverLevelRatio: null,
-    },
-    성동구: {
-      guName: "성동구",
-      target: useRef<SVGPathElement>(null),
-      riverLevel: [],
-      averageRiverLevelRatio: null,
-    },
-    용산구: {
-      guName: "용산구",
-      target: useRef<SVGPathElement>(null),
-      riverLevel: [],
-      averageRiverLevelRatio: null,
-    },
-    중구: {
-      guName: "중구",
-      target: useRef<SVGPathElement>(null),
-      riverLevel: [],
-      averageRiverLevelRatio: null,
-    },
-    종로구: {
-      guName: "종로구",
-      target: useRef<SVGPathElement>(null),
-      riverLevel: [],
-      averageRiverLevelRatio: null,
-    },
-  };
-
   useEffect(() => {
-    if (riverData) {
-      if (type === "seoul") {
-        // 서울 지역 별 하천수위 정보를 seoulRegion애 분류
-        riverData.ListRiverStageService.row.forEach(itm => {
-          seoulRegions[itm.GU_NAME].riverLevel.push({
-            riverName: itm.RIVER_NAME,
-            rivergaugeName: itm.RIVERGAUGE_NAME,
-            currentLevel: itm.CURRENT_LEVEL,
-            planfloodLevel: itm.PLANFLOOD_LEVEL,
-            riverLevelRatio: itm.CURRENT_LEVEL / itm.PLANFLOOD_LEVEL,
-          });
+    if (type === "seoul") {
+      // 서울 지역 별 하천수위 정보를 seoulRegion애 분류
+      for (const key in seoulRegions) {
+        seoulRegions[key].riverLevel = [];
+        seoulRegions[key].averageRiverLevelRatio = null;
+      }
+      riverData.ListRiverStageService.row.forEach(itm => {
+        seoulRegions[itm.GU_NAME].riverLevel.push({
+          riverName: itm.RIVER_NAME,
+          rivergaugeName: itm.RIVERGAUGE_NAME,
+          currentLevel: itm.CURRENT_LEVEL,
+          planfloodLevel: itm.PLANFLOOD_LEVEL,
+          riverLevelRatio: itm.CURRENT_LEVEL / itm.PLANFLOOD_LEVEL,
         });
+      });
 
-        // 서울 각 지역의 하천수위 정보로 시각화 처리
-        console.log("map", seoulRegions);
-        for (const key in seoulRegions) {
-          const region = seoulRegions[key];
-          if (region.riverLevel.length > 0) {
-            // 하천수위 정보가 존재하는 경우
+      // 서울 각 지역의 하천수위 정보로 시각화 처리
+      console.log("map", seoulRegions);
+      for (const key in seoulRegions) {
+        const region = seoulRegions[key];
+        if (region.riverLevel.length > 0) {
+          // 하천수위 정보가 존재하는 경우
 
-            // 지역별 평균 계획홍수위 대비 현재하천수위 비율
-            let averageRiverLevelRatio = 0;
-            region.riverLevel.forEach(itm => {
-              averageRiverLevelRatio += itm.riverLevelRatio;
-            });
-            averageRiverLevelRatio /= region.riverLevel.length;
-            region.averageRiverLevelRatio = averageRiverLevelRatio;
+          // 지역별 평균 계획홍수위 대비 현재하천수위 비율
+          let averageRiverLevelRatio = 0;
+          region.riverLevel.forEach(itm => {
+            averageRiverLevelRatio += itm.riverLevelRatio;
+          });
+          averageRiverLevelRatio /= region.riverLevel.length;
+          region.averageRiverLevelRatio = averageRiverLevelRatio;
 
-            // 시각화를 위한 비율 매핑
-            const mappingedAverageRiverLevelRatio =
-              ((averageRiverLevelRatio - 0.3) * (1 - 0)) / (1 - 0.3) + 0;
-            console.log(key, "평균수위비율", averageRiverLevelRatio);
+          // 시각화를 위한 비율 매핑
+          const mappingedAverageRiverLevelRatio =
+            ((averageRiverLevelRatio - 0.3) * (1 - 0)) / (1 - 0.3) + 0;
+          console.log(key, "평균수위비율", averageRiverLevelRatio);
 
-            // 각 지역에 해당하는 svg path에 스타일 적용
-            region.target.current.style.fill = `rgba(60,95,255,${mappingedAverageRiverLevelRatio.toFixed(
-              2,
-            )})`;
+          // 각 지역에 해당하는 svg path에 스타일 적용
+          region.target.current.style.fill = `rgba(60,95,255,${mappingedAverageRiverLevelRatio.toFixed(
+            2,
+          )})`;
 
-            region.target.current.addEventListener("mouseenter", () => {
-              console.log(key, "하천수위정보", region.riverLevel);
-              setMouseoveredRegion(region);
-            });
-            region.target.current.addEventListener("mouseleave", () => {
-              setMouseoveredRegion(null);
-            });
-          } else {
-            // 하천수위 정보가 존재하지 않는 경우
-            region.target.current.classList.add("no-data");
-            region.target.current.addEventListener("mouseover", () => {
-              console.log(key, "하천수위정보없음");
-            });
-          }
+          region.target.current.addEventListener("mouseenter", () => {
+            console.log(key, "하천수위정보", region.riverLevel);
+            setMouseoveredRegion(region);
+          });
+          region.target.current.addEventListener("mouseleave", () => {
+            setMouseoveredRegion(null);
+          });
+        } else {
+          // 하천수위 정보가 존재하지 않는 경우
+          region.target.current.classList.add("no-data");
+          region.target.current.addEventListener("mouseover", () => {
+            console.log(key, "하천수위정보없음");
+          });
         }
       }
     }
@@ -250,10 +87,7 @@ const MapSVG = ({ type, riverData }: MapSVGProps) => {
           mouseY={mouseMoveHook.y}
         />
       )}
-      {riverData === null && (
-        <img style={{ display: "block", margin: "auto" }} src="loading-spin.gif" alt="" />
-      )}
-      {riverData && type === "seoul" && (
+      {type === "seoul" && (
         <svg
           xmlns="http://www.w3.org/2000/svg"
           version="1.2"

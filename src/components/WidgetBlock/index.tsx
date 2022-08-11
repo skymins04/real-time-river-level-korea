@@ -1,6 +1,14 @@
+import { ReactNode } from "react";
+
 import "./style.scss";
 
-const WidgetBlock = ({ icon, title, children }: any) => {
+interface WidgetBlockProps {
+  icon: ReactNode | string;
+  title: ReactNode | string;
+  children: ReactNode;
+}
+
+const WidgetBlock = ({ icon, title, children }: WidgetBlockProps) => {
   return (
     <div className="widget-block">
       <div className="widget-title">

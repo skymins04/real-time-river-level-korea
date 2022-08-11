@@ -10,6 +10,8 @@ module.exports = {
     alias: {
       "@i18n": path.resolve(__dirname, ".", "src", "i18n"),
       "@Component": path.resolve(__dirname, ".", "src", "components"),
+      "@Hook": path.resolve(__dirname, ".", "src", "hooks"),
+      "@Lib": path.resolve(__dirname, ".", "src", "libs"),
     },
   },
   output: {
