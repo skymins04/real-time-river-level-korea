@@ -4,13 +4,21 @@ import axios from "axios";
 
 import WidgetBlock from "@Component/WidgetBlock";
 import MapSVG from "@Component/MapSVG";
+import { koreaCities } from "@Lib/regions";
+import reduxStore from "@Redux";
 
 import "./style.scss";
 
 const MainPage = () => {
-  const [riverLevelDataStore, setRiverLevelData] = useState<RiverLevelSeoulAPIResonse | null>(null);
+  const [riverLevelDataState, setRiverLevelData] = useState<RiverLevelSeoulAPIResonse | null>(null);
+  const [selectedCityState, setSelectedCity] = useState<string>(
+    (reduxStore.getState() as any).selectedCity,
+  );
 
   const { t } = useTranslation(["article"]);
+  reduxStore.subscribe(() => {
+    setSelectedCity((reduxStore.getState() as any).selectedCity);
+  });
 
   useEffect(() => {
     axios({
@@ -30,9 +38,9 @@ const MainPage = () => {
         icon={"🔍"}
         title={`${t("article:ARTICLE_WIDGET_TITLE_MAIN_GRAPH")} (${new Date()})`}
       >
-        {riverLevelDataStore ? (
+        {riverLevelDataState ? (
           <>
-            <MapSVG type={"seoul"} riverData={riverLevelDataStore}></MapSVG>
+            <MapSVG riverData={riverLevelDataState} selectedCityName={selectedCityState} />
             <div className="info">
               <div className="info-color">
                 <div className="info-color-riverlevel">

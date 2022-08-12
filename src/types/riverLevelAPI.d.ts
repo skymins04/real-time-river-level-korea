@@ -24,8 +24,18 @@ interface RiverLevelSeoulDataRow {
   CONTROL_LEVEL: number;
 }
 
+interface Cities {
+  [cityName: string]: Regions;
+}
+
 interface Regions {
-  [guName: string]: Region;
+  svg: {
+    width: number;
+    height: number;
+  };
+  regions: {
+    [guName: string]: Region;
+  };
 }
 
 interface Region {
@@ -33,6 +43,11 @@ interface Region {
   target: Ref<SVGPathElement>;
   riverLevel: Array<RiverLevel>;
   averageRiverLevelRatio: number | null;
+  svgPath: string;
+  svgTextPos: {
+    x: number;
+    y: number;
+  };
 }
 
 interface RiverLevel {

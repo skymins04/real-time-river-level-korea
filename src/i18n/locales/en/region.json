@@ -1,4 +1,5 @@
 {
+  "REGION_CITY_SEOUL": "Seoul",
   "REGION_강동구": "Gangdong-gu",
   "REGION_송파구": "Songpa-gu",
   "REGION_강남구": "Gangnam-gu",
@@ -23,7 +24,7 @@
   "REGION_성동구": "Seongdong-gu",
   "REGION_용산구": "Yongsan-gu",
   "REGION_중구": "Jung-gu",
-  "REGION_종로": "Jongno-gu",
+  "REGION_종로구": "Jongno-gu",
   "REGION_RIVER_중랑천": "Jungnangcheon",
   "REGION_RIVER_방학천": "Banghakcheon",
   "REGION_RIVER_우이천": "Uicheon",

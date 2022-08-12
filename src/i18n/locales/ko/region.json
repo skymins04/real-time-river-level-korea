@@ -1,4 +1,5 @@
 {
+  "REGION_CITY_SEOUL": "서울시",
   "REGION_강동구": "강동구",
   "REGION_송파구": "송파구",
   "REGION_강남구": "강남구",
@@ -23,7 +24,7 @@
   "REGION_성동구": "성동구",
   "REGION_용산구": "용산구",
   "REGION_중구": "중구",
-  "REGION_종로": "종로구",
+  "REGION_종로구": "종로구",
   "REGION_RIVER_중랑천": "중랑천",
   "REGION_RIVER_방학천": "방학천",
   "REGION_RIVER_우이천": "우이천",

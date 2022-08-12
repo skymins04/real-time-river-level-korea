@@ -12,6 +12,7 @@ module.exports = {
       "@Component": path.resolve(__dirname, ".", "src", "components"),
       "@Hook": path.resolve(__dirname, ".", "src", "hooks"),
       "@Lib": path.resolve(__dirname, ".", "src", "libs"),
+      "@Redux": path.resolve(__dirname, ".", "src", "redux"),
     },
   },
   output: {

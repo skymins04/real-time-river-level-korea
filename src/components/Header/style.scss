@@ -39,13 +39,17 @@
   }
 
   .lang-select-area {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
     position: absolute;
     left: 50%;
     bottom: 70px;
     transform: translateX(-50%);
     color: white;
 
-    #lang-select {
+    .selectBox {
       background-color: transparent;
       color: white;
       border: 1px solid white;
