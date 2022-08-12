@@ -1,8 +1,13 @@
-import { legacy_createStore as createStore } from "redux";
+import { legacy_createStore as createStore, applyMiddleware, compose } from "redux";
+import logger from "redux-logger";
+import { composeWithDevTools } from "redux-devtools-extension";
 
-const reduxStore = createStore((state, action: any) => {
+const rootReducer = (state: any, action: any) => {
   if (state === undefined) {
     return {
+      isMobile: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent,
+      ),
       selectedCity: "seoul",
       selectedRegion: null,
     };
@@ -16,6 +21,13 @@ const reduxStore = createStore((state, action: any) => {
   }
 
   return state;
-}, (window as any).__REDUX_DEVTOOLS_EXTENSION__ && (window as any).__REDUX_DEVTOOLS_EXTENSION__());
+};
+
+const enhancer =
+  process.env.NODE_ENV === "production"
+    ? compose(applyMiddleware())
+    : composeWithDevTools(applyMiddleware(logger));
+
+const reduxStore = createStore(rootReducer, enhancer);
 
 export default reduxStore;

@@ -4,24 +4,20 @@ import axios from "axios";
 
 import WidgetBlock from "@Component/WidgetBlock";
 import MapSVG from "@Component/MapSVG";
-import reduxStore from "@Redux";
 
 import "./style.scss";
+import { useSelector } from "react-redux";
 
 const MainPage = () => {
+  const { selectedCity, selectedRegion } = useSelector((state: RootState) => ({
+    selectedCity: state.selectedCity,
+    selectedRegion: state.selectedRegion,
+  }));
   const [riverLevelDataState, setRiverLevelData] = useState<RiverLevelSeoulAPIResonse | null>(null);
-  const [selectedCityState, setSelectedCity] = useState<string>(
-    (reduxStore.getState() as any).selectedCity,
-  );
-  const [selectedRegionState, setSelectedRegion] = useState<Region | null>(
-    (reduxStore.getState() as any).selectedRegion,
-  );
+  const [selectedCityState, setSelectedCity] = useState<string>(selectedCity);
+  const [selectedRegionState, setSelectedRegion] = useState<Region | null>(selectedRegion);
 
   const { t } = useTranslation(["article", "region"]);
-  reduxStore.subscribe(() => {
-    setSelectedCity((reduxStore.getState() as any).selectedCity);
-    setSelectedRegion((reduxStore.getState() as any).selectedRegion);
-  });
 
   useEffect(() => {
     axios({
@@ -34,6 +30,14 @@ const MainPage = () => {
       setRiverLevelData(res.data);
     });
   }, []);
+
+  useEffect(() => {
+    setSelectedCity(selectedCity);
+  }, [selectedCity]);
+
+  useEffect(() => {
+    setSelectedRegion(selectedRegion);
+  }, [selectedRegion]);
 
   return (
     <>

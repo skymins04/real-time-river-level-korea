@@ -8,6 +8,7 @@
   border-radius: 10px;
   // box-shadow: 0 0 5px #666;
   z-index: 1000;
+  animation: fade-in-opacity 0.2s ease-in-out;
 
   .region-name {
     margin-bottom: 5px;

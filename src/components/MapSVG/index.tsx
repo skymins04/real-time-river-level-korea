@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 import { useMouseMove } from "@Hook";
 import logger from "@Lib/logger";
 import { koreaCities } from "@Lib/regions";
-import reduxStore from "@Redux";
 
 import PopupRegionInfo from "@Component/PopupRegionInfo";
 import RegionNameSVGText from "./RegionNameSVGText";
@@ -16,10 +16,13 @@ interface MapSVGProps {
 }
 
 const MapSVG = ({ riverData, selectedCityName }: MapSVGProps) => {
+  const { isMobile } = useSelector((state: RootState) => ({ isMobile: state.isMobile }));
   const [mouseoveredRegionState, setMouseoveredRegion] = useState<Region | null>(null);
   const [regionsState, setRegions] = useState<Regions>(koreaCities[selectedCityName]);
   const [regionNamesStore, setRegionNames] = useState<string[]>([]);
+  const popupRegionInfoRef = useRef<HTMLDivElement>(null);
   const mouseMoveHook = useMouseMove();
+  const reduxDispatch = useDispatch();
 
   // 맵 SVG를 랜더링하기 위한 regions key 값 추출
   useEffect(() => {
@@ -82,7 +85,7 @@ const MapSVG = ({ riverData, selectedCityName }: MapSVGProps) => {
           }
         }
       }
-      reduxStore.dispatch({ type: "SELECT_REGION", selectedRegion: maxRegion });
+      reduxDispatch({ type: "SELECT_REGION", selectedRegion: maxRegion });
 
       return newState;
     });
@@ -102,13 +105,14 @@ const MapSVG = ({ riverData, selectedCityName }: MapSVGProps) => {
 
   const clickRegion = (region: Region) => {
     logger.debug("clicked region", region);
-    reduxStore.dispatch({ type: "SELECT_REGION", selectedRegion: region });
+    reduxDispatch({ type: "SELECT_REGION", selectedRegion: region });
   };
 
   return (
     <div className="map">
-      {mouseoveredRegionState && (
+      {!isMobile && mouseoveredRegionState && (
         <PopupRegionInfo
+          ref={popupRegionInfoRef}
           region={mouseoveredRegionState}
           mouseX={mouseMoveHook.x}
           mouseY={mouseMoveHook.y}
@@ -125,7 +129,7 @@ const MapSVG = ({ riverData, selectedCityName }: MapSVGProps) => {
         strokeLinejoin="round"
         onMouseMove={mouseMoveHook.handler}
       >
-        <g id="seoul_municipalities_geo">
+        <g>
           {regionNamesStore.map((itm, idx) => {
             return (
               <g key={idx}>
