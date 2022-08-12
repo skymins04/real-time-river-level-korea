@@ -4,12 +4,15 @@ const reduxStore = createStore((state, action: any) => {
   if (state === undefined) {
     return {
       selectedCity: "seoul",
+      selectedRegion: null,
     };
   }
 
   switch (action.type) {
     case "SELECT_CITY":
       return { ...state, selectedCity: action.selectedCity };
+    case "SELECT_REGION":
+      return { ...state, selectedRegion: action.selectedRegion };
   }
 
   return state;

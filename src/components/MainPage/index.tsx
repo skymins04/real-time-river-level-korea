@@ -4,7 +4,6 @@ import axios from "axios";
 
 import WidgetBlock from "@Component/WidgetBlock";
 import MapSVG from "@Component/MapSVG";
-import { koreaCities } from "@Lib/regions";
 import reduxStore from "@Redux";
 
 import "./style.scss";
@@ -14,10 +13,14 @@ const MainPage = () => {
   const [selectedCityState, setSelectedCity] = useState<string>(
     (reduxStore.getState() as any).selectedCity,
   );
+  const [selectedRegionState, setSelectedRegion] = useState<Region | null>(
+    (reduxStore.getState() as any).selectedRegion,
+  );
 
-  const { t } = useTranslation(["article"]);
+  const { t } = useTranslation(["article", "region"]);
   reduxStore.subscribe(() => {
     setSelectedCity((reduxStore.getState() as any).selectedCity);
+    setSelectedRegion((reduxStore.getState() as any).selectedRegion);
   });
 
   useEffect(() => {
@@ -63,7 +66,12 @@ const MainPage = () => {
         )}
       </WidgetBlock>
       <div className="sub-articles">
-        <WidgetBlock icon={"📊"} title={`${t("article:ARTICLE_WIDGET_TITLE_DETAIL_GRAPH")}`}>
+        <WidgetBlock
+          icon={"📊"}
+          title={`${
+            selectedRegionState ? t(`region:REGION_${selectedRegionState.guName}`) : ""
+          } ${t("article:ARTICLE_WIDGET_TITLE_DETAIL_GRAPH")}`}
+        >
           <h1>준비중입니다.</h1>
         </WidgetBlock>
         <WidgetBlock icon={"📰"} title={"News"}>

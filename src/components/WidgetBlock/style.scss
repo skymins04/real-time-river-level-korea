@@ -12,24 +12,23 @@
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    gap: 5px;
+    gap: 10px;
     margin-bottom: var(--pd);
 
     .icon {
       display: flex;
       justify-content: center;
       align-items: center;
-      width: 32px;
-      height: 32px;
-      font-size: 32px;
-      margin-right: 5px;
+      width: 24px;
+      height: 24px;
+      font-size: 24px;
     }
     .icon:empty {
       background-color: red;
     }
 
     .text {
-      font-size: 24px;
+      font-size: 20px;
     }
   }
 

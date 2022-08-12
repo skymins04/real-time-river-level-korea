@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useMouseMove } from "@Hook";
 import logger from "@Lib/logger";
 import { koreaCities } from "@Lib/regions";
+import reduxStore from "@Redux";
 
 import PopupRegionInfo from "@Component/PopupRegionInfo";
 import RegionNameSVGText from "./RegionNameSVGText";
@@ -49,6 +50,8 @@ const MapSVG = ({ riverData, selectedCityName }: MapSVGProps) => {
       });
 
       // 분류된 정보로 맵 시각화
+      let maxAverageRiverLevelRatio = -99999;
+      let maxRegion: Region | null = null;
       for (const key in newState.regions) {
         const region = newState.regions[key];
         if (region.target.current) {
@@ -60,6 +63,10 @@ const MapSVG = ({ riverData, selectedCityName }: MapSVGProps) => {
             });
             averageRiverLevelRatio /= region.riverLevel.length;
             region.averageRiverLevelRatio = averageRiverLevelRatio;
+            if (maxAverageRiverLevelRatio < averageRiverLevelRatio) {
+              maxRegion = region;
+              maxAverageRiverLevelRatio = averageRiverLevelRatio;
+            }
 
             // 시각화를 위한 비율 매핑
             const mappingedAverageRiverLevelRatio =
@@ -75,6 +82,7 @@ const MapSVG = ({ riverData, selectedCityName }: MapSVGProps) => {
           }
         }
       }
+      reduxStore.dispatch({ type: "SELECT_REGION", selectedRegion: maxRegion });
 
       return newState;
     });
@@ -90,6 +98,11 @@ const MapSVG = ({ riverData, selectedCityName }: MapSVGProps) => {
   // 지역 SVG path mouse leave event handler
   const mouseLeaveRegion = () => {
     setMouseoveredRegion(null);
+  };
+
+  const clickRegion = (region: Region) => {
+    logger.debug("clicked region", region);
+    reduxStore.dispatch({ type: "SELECT_REGION", selectedRegion: region });
   };
 
   return (
@@ -122,6 +135,7 @@ const MapSVG = ({ riverData, selectedCityName }: MapSVGProps) => {
                   d={regionsState.regions[itm].svgPath}
                   onMouseEnter={() => mouseEnterRegion(regionsState.regions[itm])}
                   onMouseLeave={mouseLeaveRegion}
+                  onClick={() => clickRegion(regionsState.regions[itm])}
                 />
                 <RegionNameSVGText
                   x={regionsState.regions[itm].svgTextPos.x}
