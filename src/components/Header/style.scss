@@ -38,7 +38,7 @@
     }
   }
 
-  .lang-select-area {
+  .control-bar {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -49,13 +49,26 @@
     transform: translateX(-50%);
     color: white;
 
-    .selectBox {
+    .btn {
       background-color: transparent;
       color: white;
       border: 1px solid white;
       border-radius: 0.5em;
-      padding: 0.2em 0.5em;
+      height: 2.4em;
+      padding: 0 0.5em;
       margin-left: 0.5em;
+      transition: 0.2s;
+      white-space: nowrap;
+
+      svg {
+        margin-right: 2px;
+      }
+    }
+
+    .btn:hover {
+      cursor: pointer;
+      background-color: white;
+      color: #2f2f2f;
     }
   }
 }

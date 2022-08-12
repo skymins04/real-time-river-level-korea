@@ -10,6 +10,7 @@ const rootReducer = (state: any, action: any) => {
       ),
       selectedCity: "seoul",
       selectedRegion: null,
+      riverLevelData: null,
     };
   }
 
@@ -18,6 +19,8 @@ const rootReducer = (state: any, action: any) => {
       return { ...state, selectedCity: action.selectedCity };
     case "SELECT_REGION":
       return { ...state, selectedRegion: action.selectedRegion };
+    case "SET_RIVER_LEVEL_DATA":
+      return { ...state, riverLevelData: action.riverLevelData };
   }
 
   return state;

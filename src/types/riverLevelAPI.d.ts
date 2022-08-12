@@ -24,8 +24,10 @@ interface RiverLevelSeoulDataRow {
   CONTROL_LEVEL: number;
 }
 
+type CityName = "seoul";
+
 interface Cities {
-  [cityName: string]: Regions;
+  [cityName: CityName]: Regions;
 }
 
 interface Regions {

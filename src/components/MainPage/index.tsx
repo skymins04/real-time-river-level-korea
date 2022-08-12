@@ -1,47 +1,47 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import axios from "axios";
 
 import WidgetBlock from "@Component/WidgetBlock";
 import MapSVG from "@Component/MapSVG";
+import { useRiverLevelData } from "@Hook";
 
 import "./style.scss";
 import { useSelector } from "react-redux";
 
 const MainPage = () => {
-  const { selectedCity, selectedRegion } = useSelector((state: RootState) => ({
+  const { selectedCity, selectedRegion, riverLevelData } = useSelector((state: RootState) => ({
     selectedCity: state.selectedCity,
     selectedRegion: state.selectedRegion,
+    riverLevelData: state.riverLevelData,
   }));
   const [riverLevelDataState, setRiverLevelData] = useState<RiverLevelSeoulAPIResonse | null>(null);
-  const [selectedCityState, setSelectedCity] = useState<string>(selectedCity);
+  const [selectedCityState, setSelectedCity] = useState<CityName>(selectedCity);
   const [selectedRegionState, setSelectedRegion] = useState<Region | null>(selectedRegion);
+  const getRiverLevelData = useRiverLevelData();
 
   const { t } = useTranslation(["article", "region"]);
 
   useEffect(() => {
-    axios({
-      method: "GET",
-      url: `http://openAPI.seoul.go.kr:8088/${process.env["REACT_APP_RIVER_LEVEL_SEOUL_API_KEY"]}/json/ListRiverStageService/1/1000`,
-    }).then(res => {
-      (res.data as RiverLevelSeoulAPIResonse).ListRiverStageService.row.forEach(itm => {
-        itm.RIVER_NAME = itm.RIVER_NAME.trim();
-      });
-      setRiverLevelData(res.data);
-    });
+    getRiverLevelData(selectedCityState);
   }, []);
 
   useEffect(() => {
     setSelectedCity(selectedCity);
+    getRiverLevelData(selectedCity);
   }, [selectedCity]);
 
   useEffect(() => {
     setSelectedRegion(selectedRegion);
   }, [selectedRegion]);
 
+  useEffect(() => {
+    setRiverLevelData(riverLevelData);
+  }, [riverLevelData]);
+
   return (
     <>
       <WidgetBlock
+        widgetId="main-graph"
         icon={"🔍"}
         title={`${t("article:ARTICLE_WIDGET_TITLE_MAIN_GRAPH")} (${new Date()})`}
       >
@@ -64,6 +64,17 @@ const MainPage = () => {
                 </div>
               </div>
             </div>
+            <div className="info-bottom">
+              <div className="text title font-bolder">ⓘ 용어설명</div>
+              <div className="text info">
+                <span className="font-bolder">하천수위비율(%)</span> = 현재하천수위(m) ÷
+                계획홍수위(m)
+              </div>
+              <div className="text info">
+                <span className="font-bolder">평균하천수위비율(%)</span> = 지역 내 각 하천들의
+                하천수위비율 평균
+              </div>
+            </div>
           </>
         ) : (
           <img style={{ display: "block", margin: "auto" }} src="loading-spin.gif" alt="" />
@@ -78,7 +89,12 @@ const MainPage = () => {
         >
           <h1>준비중입니다.</h1>
         </WidgetBlock>
-        <WidgetBlock icon={"📰"} title={"News"}>
+        <WidgetBlock
+          icon={"🏢"}
+          title={`${t(`region:REGION_CITY_${selectedCityState.toUpperCase()}`)} ${t(
+            "article:ARTICLE_WIDGET_TITLE_DETAIL_GRAPH",
+          )}`}
+        >
           <h1>준비중입니다.</h1>
         </WidgetBlock>
       </div>

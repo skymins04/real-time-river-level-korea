@@ -11,6 +11,39 @@
   animation: fade-in-opacity 0.4s ease-in-out;
 }
 
+#main-graph {
+  --info-bottom-height: 80px;
+  padding-bottom: calc(var(--info-bottom-height) + var(--pd));
+
+  .info-bottom {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    flex-direction: column;
+    position: absolute;
+    bottom: calc(var(--info-bottom-height) * -1);
+    left: 0;
+    width: 100%;
+    height: var(--info-bottom-height);
+    // border: 1px solid red;
+
+    .text {
+      height: max-content;
+      text-align: center;
+      color: #666;
+    }
+
+    .title {
+      font-size: 14px;
+      margin-bottom: 5px;
+    }
+
+    .info {
+      font-size: 10px;
+    }
+  }
+}
+
 @media (min-width: 768px) {
   .widget-block .info {
     display: block;

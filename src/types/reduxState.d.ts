@@ -1,5 +1,6 @@
 interface RootState {
   isMobile: boolean;
-  selectedCity: string;
+  selectedCity: CityName;
   selectedRegion: Region | null;
+  riverLevelData: RiverLevelSeoulAPIResonse | null;
 }

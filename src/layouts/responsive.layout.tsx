@@ -1,3 +1,4 @@
+import GoToTop from "@Component/GoToTop";
 import { PropsWithChildren } from "react";
 import { useMediaQuery } from "react-responsive";
 
@@ -18,6 +19,7 @@ const ResponsiveLayout = ({ children }: PropsWithChildren) => {
     <>
       <Desktop />
       <Mobile />
+      <GoToTop />
     </>
   );
 };
