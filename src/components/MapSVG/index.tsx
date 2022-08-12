@@ -12,7 +12,7 @@ import "./style.scss";
 
 interface MapSVGProps {
   riverData: RiverLevelSeoulAPIResonse;
-  selectedCityName: string;
+  selectedCityName: CityName;
 }
 
 const MapSVG = ({ riverData, selectedCityName }: MapSVGProps) => {
@@ -93,9 +93,7 @@ const MapSVG = ({ riverData, selectedCityName }: MapSVGProps) => {
 
   // 지역 SVG path mouse enter event handler
   const mouseEnterRegion = (region: Region) => {
-    if (region.averageRiverLevelRatio) {
-      setMouseoveredRegion(region);
-    }
+    setMouseoveredRegion(region);
   };
 
   // 지역 SVG path mouse leave event handler
@@ -103,6 +101,7 @@ const MapSVG = ({ riverData, selectedCityName }: MapSVGProps) => {
     setMouseoveredRegion(null);
   };
 
+  // 지역 SVG path click event handler
   const clickRegion = (region: Region) => {
     logger.debug("clicked region", region);
     reduxDispatch({ type: "SELECT_REGION", selectedRegion: region });
@@ -110,7 +109,7 @@ const MapSVG = ({ riverData, selectedCityName }: MapSVGProps) => {
 
   return (
     <div className="map">
-      {!isMobile && mouseoveredRegionState && (
+      {!isMobile && mouseoveredRegionState && mouseoveredRegionState.averageRiverLevelRatio && (
         <PopupRegionInfo
           ref={popupRegionInfoRef}
           region={mouseoveredRegionState}
@@ -132,22 +131,29 @@ const MapSVG = ({ riverData, selectedCityName }: MapSVGProps) => {
         <g>
           {regionNamesStore.map((itm, idx) => {
             return (
-              <g key={idx}>
-                <path
-                  data-gu-name={itm}
-                  ref={regionsState.regions[itm].target}
-                  d={regionsState.regions[itm].svgPath}
-                  onMouseEnter={() => mouseEnterRegion(regionsState.regions[itm])}
-                  onMouseLeave={mouseLeaveRegion}
-                  onClick={() => clickRegion(regionsState.regions[itm])}
-                />
-                <RegionNameSVGText
-                  x={regionsState.regions[itm].svgTextPos.x}
-                  y={regionsState.regions[itm].svgTextPos.y}
-                  regionName={itm}
-                  averageRiverLevelRatio={regionsState.regions[itm].averageRiverLevelRatio}
-                ></RegionNameSVGText>
-              </g>
+              <path
+                key={idx}
+                id={`svg-path-${itm}`}
+                ref={regionsState.regions[itm].target}
+                d={regionsState.regions[itm].svgPath}
+                onMouseEnter={() => mouseEnterRegion(regionsState.regions[itm])}
+                onMouseLeave={mouseLeaveRegion}
+                onClick={() => clickRegion(regionsState.regions[itm])}
+              />
+            );
+          })}
+          <use href={mouseoveredRegionState ? `#svg-path-${mouseoveredRegionState.guName}` : ""} />
+        </g>
+        <g>
+          {regionNamesStore.map((itm, idx) => {
+            return (
+              <RegionNameSVGText
+                key={idx}
+                x={regionsState.regions[itm].svgTextPos.x}
+                y={regionsState.regions[itm].svgTextPos.y}
+                regionName={itm}
+                averageRiverLevelRatio={regionsState.regions[itm].averageRiverLevelRatio}
+              ></RegionNameSVGText>
             );
           })}
         </g>
