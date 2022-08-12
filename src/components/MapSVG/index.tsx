@@ -105,6 +105,10 @@ const MapSVG = ({ riverData, selectedCityName }: MapSVGProps) => {
   const clickRegion = (region: Region) => {
     logger.debug("clicked region", region);
     reduxDispatch({ type: "SELECT_REGION", selectedRegion: region });
+    window.scrollTo({
+      top: document.getElementById("region-detail-graph")?.getBoundingClientRect().top,
+      behavior: "smooth",
+    });
   };
 
   return (

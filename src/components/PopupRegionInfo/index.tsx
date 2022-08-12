@@ -47,7 +47,8 @@ const PopupRegionInfo = forwardRef(
         {region.riverLevel.map((itm, idx) => (
           <div key={idx} className="region-river-data">
             <div className="region-river-name">
-              {t(`region:REGION_RIVER_${itm.riverName}`)} - {itm.rivergaugeName}
+              {t(`region:REGION_RIVER_${itm.riverName}`)} -{" "}
+              {t(`region:REGION_RIVERGAUGE_${itm.rivergaugeName}`)}
             </div>
             <div className="region-river-data-content region-river-current-level">
               <div className="title">{t("article:ARTICLE_MAIN_GRAPH_INFO_TITLE_3")}:</div>

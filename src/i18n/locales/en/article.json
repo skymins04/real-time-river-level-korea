@@ -5,5 +5,12 @@
   "ARTICLE_MAIN_GRAPH_INFO_TITLE_2": "no data",
   "ARTICLE_MAIN_GRAPH_INFO_TITLE_3": "current level",
   "ARTICLE_MAIN_GRAPH_INFO_TITLE_4": "planflood level",
-  "ARTICLE_MAIN_GRAPH_INFO_TITLE_5": "river level ratio"
+  "ARTICLE_MAIN_GRAPH_INFO_TITLE_5": "river level ratio",
+  "ARTICLE_MAIN_GPATH_DESCRIPTION_TITLE": "Infomation Use",
+  "ARTICLE_MAIN_GPATH_DESCRIPTION_TEXT_1": "river level ratio(%)",
+  "ARTICLE_MAIN_GPATH_DESCRIPTION_TEXT_2": " = current level(m) ÷ planflood level(m)",
+  "ARTICLE_MAIN_GPATH_DESCRIPTION_TEXT_3": "Average river level ratio(%)",
+  "ARTICLE_MAIN_GPATH_DESCRIPTION_TEXT_4": " = Average river level ratio of each river in the region",
+  "ARTICLE_MAIN_GPATH_DESCRIPTION_TEXT_5": "If you click/touch each area,",
+  "ARTICLE_MAIN_GPATH_DESCRIPTION_TEXT_6": " you can check the detailed river level/precipitation statistics for that area."
 }

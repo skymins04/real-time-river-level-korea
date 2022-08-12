@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
 
 import WidgetBlock from "@Component/WidgetBlock";
 import MapSVG from "@Component/MapSVG";
+import LoadingSpinner from "@Component/LoadingSpinner";
 import { useRiverLevelData } from "@Hook";
 
 import "./style.scss";
-import { useSelector } from "react-redux";
 
 const MainPage = () => {
   const { selectedCity, selectedRegion, riverLevelData } = useSelector((state: RootState) => ({
@@ -65,31 +66,48 @@ const MainPage = () => {
               </div>
             </div>
             <div className="info-bottom">
-              <div className="text title font-bolder">ⓘ 용어설명</div>
-              <div className="text info">
-                <span className="font-bolder">하천수위비율(%)</span> = 현재하천수위(m) ÷
-                계획홍수위(m)
+              <div className="text title font-bolder">
+                ⓘ {t("article:ARTICLE_MAIN_GPATH_DESCRIPTION_TITLE")}
               </div>
               <div className="text info">
-                <span className="font-bolder">평균하천수위비율(%)</span> = 지역 내 각 하천들의
-                하천수위비율 평균
+                *
+                <span className="font-bolder">
+                  {t("article:ARTICLE_MAIN_GPATH_DESCRIPTION_TEXT_1")}
+                </span>
+                {t("article:ARTICLE_MAIN_GPATH_DESCRIPTION_TEXT_2")}
+              </div>
+              <div className="text info">
+                *
+                <span className="font-bolder">
+                  {t("article:ARTICLE_MAIN_GPATH_DESCRIPTION_TEXT_3")}
+                </span>
+                {t("article:ARTICLE_MAIN_GPATH_DESCRIPTION_TEXT_4")}
+              </div>
+              <div className="text info">
+                *
+                <span className="font-bolder">
+                  {t("article:ARTICLE_MAIN_GPATH_DESCRIPTION_TEXT_5")}
+                </span>
+                {t("article:ARTICLE_MAIN_GPATH_DESCRIPTION_TEXT_6")}
               </div>
             </div>
           </>
         ) : (
-          <img style={{ display: "block", margin: "auto" }} src="loading-spin.gif" alt="" />
+          <LoadingSpinner />
         )}
       </WidgetBlock>
       <div className="sub-articles">
         <WidgetBlock
+          widgetId="region-detail-graph"
           icon={"📊"}
           title={`${
             selectedRegionState ? t(`region:REGION_${selectedRegionState.guName}`) : ""
           } ${t("article:ARTICLE_WIDGET_TITLE_DETAIL_GRAPH")}`}
         >
-          <h1>준비중입니다.</h1>
+          {selectedRegionState ? <h1>준비중입니다.</h1> : <LoadingSpinner />}
         </WidgetBlock>
         <WidgetBlock
+          widgetId="city-detail-graph"
           icon={"🏢"}
           title={`${t(`region:REGION_CITY_${selectedCityState.toUpperCase()}`)} ${t(
             "article:ARTICLE_WIDGET_TITLE_DETAIL_GRAPH",
