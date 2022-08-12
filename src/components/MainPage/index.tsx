@@ -5,11 +5,15 @@ import { useSelector } from "react-redux";
 import WidgetBlock from "@Component/WidgetBlock";
 import MapSVG from "@Component/MapSVG";
 import LoadingSpinner from "@Component/LoadingSpinner";
+import ChartBar from "@Component/ChartBar";
 import { useRiverLevelData } from "@Hook";
+import i18n from "@i18n";
 
 import "./style.scss";
 
 const MainPage = () => {
+  const { t } = useTranslation(["article", "region"]);
+
   const { selectedCity, selectedRegion, riverLevelData } = useSelector((state: RootState) => ({
     selectedCity: state.selectedCity,
     selectedRegion: state.selectedRegion,
@@ -18,9 +22,16 @@ const MainPage = () => {
   const [riverLevelDataState, setRiverLevelData] = useState<RiverLevelSeoulAPIResonse | null>(null);
   const [selectedCityState, setSelectedCity] = useState<CityName>(selectedCity);
   const [selectedRegionState, setSelectedRegion] = useState<Region | null>(selectedRegion);
+  const [regionDetailGraphDataState, setRegionDetailGraphData] = useState<
+    | {
+        [key: string]: number | string;
+      }[]
+    | null
+  >(null);
+  const [regionDetailGraphDataKeyState, setRegionDetailGraphDataKey] = useState<string[]>([]);
+  const [regionDetailGraphAxisBottomLegendState, setRegionDetailGraphAxisBottomLegendState] =
+    useState<string>(t("article:ARTICLE_REGION_DETAIL_GRAPH_AXIS_BOTTOM_LEGEND"));
   const getRiverLevelData = useRiverLevelData();
-
-  const { t } = useTranslation(["article", "region"]);
 
   useEffect(() => {
     getRiverLevelData(selectedCityState);
@@ -32,12 +43,40 @@ const MainPage = () => {
   }, [selectedCity]);
 
   useEffect(() => {
+    setRegionDetailGraphData(null);
     setSelectedRegion(selectedRegion);
   }, [selectedRegion]);
 
   useEffect(() => {
     setRiverLevelData(riverLevelData);
   }, [riverLevelData]);
+
+  useEffect(() => {
+    if (selectedRegionState && selectedRegionState?.averageRiverLevelRatio) {
+      const regionDetailGraphData: any = [];
+      selectedRegionState.riverLevel.forEach(itm => {
+        const data: any = {};
+        data["rivergauge"] = `[${t(`region:REGION_RIVER_${itm.riverName}`)}] ${t(
+          `region:REGION_RIVERGAUGE_${itm.rivergaugeName}`,
+        )}`;
+        data[t("article:ARTICLE_REGION_DETAIL_GRAPH_KEY_1")] = itm.currentLevel;
+        data[t("article:ARTICLE_REGION_DETAIL_GRAPH_KEY_2")] = itm.planfloodLevel;
+        data[t("article:ARTICLE_REGION_DETAIL_GRAPH_KEY_3")] = parseFloat(
+          (itm.riverLevelRatio * 100).toFixed(2),
+        );
+        regionDetailGraphData.push(data);
+      });
+      setRegionDetailGraphAxisBottomLegendState(
+        t("article:ARTICLE_REGION_DETAIL_GRAPH_AXIS_BOTTOM_LEGEND"),
+      );
+      setRegionDetailGraphDataKey([
+        t("article:ARTICLE_REGION_DETAIL_GRAPH_KEY_1"),
+        t("article:ARTICLE_REGION_DETAIL_GRAPH_KEY_2"),
+        t("article:ARTICLE_REGION_DETAIL_GRAPH_KEY_3"),
+      ]);
+      setRegionDetailGraphData(regionDetailGraphData);
+    }
+  }, [selectedRegionState, i18n.language]);
 
   return (
     <>
@@ -67,28 +106,28 @@ const MainPage = () => {
             </div>
             <div className="info-bottom">
               <div className="text title font-bolder">
-                ⓘ {t("article:ARTICLE_MAIN_GPATH_DESCRIPTION_TITLE")}
+                ⓘ {t("article:ARTICLE_MAIN_GRATH_DESCRIPTION_TITLE")}
               </div>
               <div className="text info">
                 *
                 <span className="font-bolder">
-                  {t("article:ARTICLE_MAIN_GPATH_DESCRIPTION_TEXT_1")}
+                  {t("article:ARTICLE_MAIN_GRATH_DESCRIPTION_TEXT_1")}
                 </span>
-                {t("article:ARTICLE_MAIN_GPATH_DESCRIPTION_TEXT_2")}
+                {t("article:ARTICLE_MAIN_GRATH_DESCRIPTION_TEXT_2")}
               </div>
               <div className="text info">
                 *
                 <span className="font-bolder">
-                  {t("article:ARTICLE_MAIN_GPATH_DESCRIPTION_TEXT_3")}
+                  {t("article:ARTICLE_MAIN_GRATH_DESCRIPTION_TEXT_3")}
                 </span>
-                {t("article:ARTICLE_MAIN_GPATH_DESCRIPTION_TEXT_4")}
+                {t("article:ARTICLE_MAIN_GRATH_DESCRIPTION_TEXT_4")}
               </div>
               <div className="text info">
                 *
                 <span className="font-bolder">
-                  {t("article:ARTICLE_MAIN_GPATH_DESCRIPTION_TEXT_5")}
+                  {t("article:ARTICLE_MAIN_GRATH_DESCRIPTION_TEXT_5")}
                 </span>
-                {t("article:ARTICLE_MAIN_GPATH_DESCRIPTION_TEXT_6")}
+                {t("article:ARTICLE_MAIN_GRATH_DESCRIPTION_TEXT_6")}
               </div>
             </div>
           </>
@@ -104,7 +143,39 @@ const MainPage = () => {
             selectedRegionState ? t(`region:REGION_${selectedRegionState.guName}`) : ""
           } ${t("article:ARTICLE_WIDGET_TITLE_DETAIL_GRAPH")}`}
         >
-          {selectedRegionState ? <h1>준비중입니다.</h1> : <LoadingSpinner />}
+          {selectedRegionState && regionDetailGraphDataState ? (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "column",
+                height: "250px",
+                width: "100%",
+                paddingBottom: "10px",
+              }}
+            >
+              <div style={{ marginBottom: "10px" }}>관측계 별 하천 수위 그래프</div>
+              <ChartBar
+                maxValue={100}
+                keys={regionDetailGraphDataKeyState}
+                data={regionDetailGraphDataState}
+                colors={{
+                  "현재하천수위(m)": "rgb(128,150,255)",
+                  "계획홍수위(m)": "rgb(60, 95, 255)",
+                  "하천수위비율(%)": "rgb(255,200,128)",
+                  "current river level(m)": "rgb(128,150,255)",
+                  "planflood level(m)": "rgb(60, 95, 255)",
+                  "river level ratio(%)": "rgb(255,200,128)",
+                }}
+                axisBottomLegend={regionDetailGraphAxisBottomLegendState}
+              />
+            </div>
+          ) : !selectedRegionState?.averageRiverLevelRatio ? (
+            <div>하천 수위 상세정보 없음</div>
+          ) : (
+            <LoadingSpinner />
+          )}
         </WidgetBlock>
         <WidgetBlock
           widgetId="city-detail-graph"

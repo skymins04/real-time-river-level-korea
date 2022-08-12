@@ -1,5 +1,6 @@
 .sub-articles {
   width: 100%;
+  max-width: 100%;
   display: flex;
   justify-content: space-evenly;
   align-items: flex-start;
@@ -98,6 +99,14 @@
       font-size: 12px;
       text-align: center;
       margin-top: 10px;
+    }
+  }
+
+  .sub-articles {
+    .widget-block {
+      width: calc(50% - var(--pd) / 2);
+      max-width: calc(50% - var(--pd) / 2);
+      min-width: calc(50% - var(--pd) / 2);
     }
   }
 }
