@@ -1,5 +1,4 @@
 const path = require("path");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const sass = require("sass");
 
@@ -14,6 +13,7 @@ module.exports = {
       "@Lib": path.resolve(__dirname, ".", "src", "libs"),
       "@Redux": path.resolve(__dirname, ".", "src", "redux"),
       "@Layout": path.resolve(__dirname, ".", "src", "layouts"),
+      "@Public": path.resolve(__dirname, ".", "public"),
     },
   },
   output: {
@@ -60,10 +60,5 @@ module.exports = {
       },
     ],
   },
-  plugins: [
-    new MiniCssExtractPlugin({ filename: `[name].css` }),
-    new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, ".", "public", "index.html"),
-    }),
-  ],
+  plugins: [new MiniCssExtractPlugin({ filename: `[name].css` })],
 };

@@ -1,10 +1,17 @@
-const LoadingSpinner = () => {
+import loadingSpinnerGif from "@Public/loading-spin.gif";
+
+import "./style.scss";
+
+interface LoadingSpinnerProps {
+  marginTop?: string;
+  marginBottom?: string;
+}
+
+const LoadingSpinner = ({ marginTop, marginBottom }: LoadingSpinnerProps) => {
   return (
-    <img
-      style={{ display: "block", width: "50%", margin: "auto" }}
-      src="https://cdn.jsdelivr.net/gh/skymins04/real-time-river-level-korea/public/loading-spin.gif"
-      alt=""
-    />
+    <div className="loading-spinner" style={{ marginTop, marginBottom }}>
+      <img src={loadingSpinnerGif} alt="" />
+    </div>
   );
 };
 

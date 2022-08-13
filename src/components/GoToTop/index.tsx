@@ -4,13 +4,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./style.scss";
 
 const GoToTop = () => {
+  const goToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
-    <div
-      className="go-to-top"
-      onClick={() => {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      }}
-    >
+    <div className="go-to-top" onClick={goToTop} aria-hidden="true">
       <FontAwesomeIcon icon={faAngleUp} />
     </div>
   );

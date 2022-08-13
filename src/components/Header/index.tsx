@@ -1,7 +1,7 @@
+import { useDispatch, useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 import { faChartLine, faArrowRotateRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useTranslation } from "react-i18next";
-import { useDispatch, useSelector } from "react-redux";
 
 import i18n from "@i18n";
 import { useRiverLevelData } from "@Hook";

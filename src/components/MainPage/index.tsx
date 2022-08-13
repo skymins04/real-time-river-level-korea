@@ -170,7 +170,7 @@ const MainPage = () => {
             </div>
           </>
         ) : (
-          <LoadingSpinner />
+          <LoadingSpinner marginBottom="-100px" />
         )}
       </WidgetBlock>
       <div className="sub-articles">
