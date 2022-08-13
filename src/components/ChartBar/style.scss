@@ -6,6 +6,7 @@
   flex-direction: column;
   width: 100%;
   padding: 10px 0;
+  animation: fade-in-opacity 1s ease-in-out;
 
   .chart-bar-title {
     display: block;

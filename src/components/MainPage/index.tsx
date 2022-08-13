@@ -116,12 +116,21 @@ const MainPage = () => {
     setCityDetailGraphData(cityDetailGraphData);
   }, [koreaCities[selectedCity], riverLevelDataState, selectedCityState, i18n.language]);
 
+  const getDateTime = () => {
+    const d = new Date();
+    return `${d.getFullYear()}. ${d.getMonth()}. ${d.getDate()} - ${
+      d.getHours() / 12 < 1 ? "오전" : "오후"
+    } ${d.getHours() % 12}:${d.getMinutes()}:${d.getSeconds()}`;
+  };
+
   return (
     <>
       <WidgetBlock
         widgetId="main-graph"
         icon={"🔍"}
-        title={`${t("article:ARTICLE_WIDGET_TITLE_MAIN_GRAPH")} (${new Date()})`}
+        title={`${t(
+          "article:ARTICLE_WIDGET_TITLE_MAIN_GRAPH",
+        )} (마지막 업데이트: ${getDateTime()})`}
       >
         {riverLevelDataState ? (
           <>
@@ -174,26 +183,53 @@ const MainPage = () => {
         )}
       </WidgetBlock>
       <div className="sub-articles">
-        <WidgetBlock widgetId="region-detail-graph">
+        <WidgetBlock
+          widgetId="region-detail-graph"
+          icon={"📌"}
+          title={`${
+            selectedRegionState ? t(`region:REGION_${selectedRegionState.guName}`) : ""
+          } ${t("article:ARTICLE_WIDGET_TITLE_DETAIL_GRAPH")}`}
+          flexDirection={"column"}
+        >
           {selectedRegionState && regionDetailGraphDataState ? (
-            <ChartBar
-              maxValue={100}
-              keys={regionDetailGraphDataKeyState}
-              data={regionDetailGraphDataState}
-              height={"250px"}
-              chartTitle={`${t(`region:REGION_${selectedRegionState.guName}`)} ${t(
-                "article:ARTICLE_REGION_DETAIL_GRAPH_TITLE",
-              )}`}
-              colors={{
-                "현재하천수위(m)": "rgb(156,173,255)",
-                "계획홍수위(m)": "rgb(107,134,255)",
-                "하천수위비율(%)": "rgb(250,172,150)",
-                "current river level(m)": "rgb(156,173,255)",
-                "planflood level(m)": "rgb(107,134,255)",
-                "river level ratio(%)": "rgb(250,172,150)",
-              }}
-              axisBottomLegend={regionDetailGraphAxisBottomLegendState}
-            />
+            <>
+              <ChartBar
+                maxValue={100}
+                keys={regionDetailGraphDataKeyState}
+                data={regionDetailGraphDataState}
+                height={"250px"}
+                chartTitle={`${t(`region:REGION_${selectedRegionState.guName}`)} ${t(
+                  "article:ARTICLE_REGION_DETAIL_GRAPH_TITLE",
+                )}`}
+                colors={{
+                  "현재하천수위(m)": "rgb(156,173,255)",
+                  "계획홍수위(m)": "rgb(107,134,255)",
+                  "하천수위비율(%)": "rgb(250,172,150)",
+                  "current river level(m)": "rgb(156,173,255)",
+                  "planflood level(m)": "rgb(107,134,255)",
+                  "river level ratio(%)": "rgb(250,172,150)",
+                }}
+                axisBottomLegend={regionDetailGraphAxisBottomLegendState}
+              />
+              <ChartBar
+                maxValue={100}
+                keys={regionDetailGraphDataKeyState}
+                data={regionDetailGraphDataState}
+                height={"250px"}
+                chartTitle={`${t(`region:REGION_${selectedRegionState.guName}`)} ${t(
+                  "article:ARTICLE_REGION_DETAIL_GRAPH_TITLE",
+                )}`}
+                colors={{
+                  "현재하천수위(m)": "rgb(156,173,255)",
+                  "계획홍수위(m)": "rgb(107,134,255)",
+                  "하천수위비율(%)": "rgb(250,172,150)",
+                  "current river level(m)": "rgb(156,173,255)",
+                  "planflood level(m)": "rgb(107,134,255)",
+                  "river level ratio(%)": "rgb(250,172,150)",
+                }}
+                axisBottomLegend={regionDetailGraphAxisBottomLegendState}
+              />
+            </>
           ) : (
             selectedRegionState?.averageRiverLevelRatio && <LoadingSpinner />
           )}

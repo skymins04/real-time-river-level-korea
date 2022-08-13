@@ -7,9 +7,10 @@ interface WidgetBlockProps {
   icon?: ReactNode | string;
   title?: ReactNode | string;
   children: ReactNode;
+  flexDirection?: "row" | "row-reverse" | "column" | "column-reverse";
 }
 
-const WidgetBlock = ({ widgetId, icon, title, children }: WidgetBlockProps) => {
+const WidgetBlock = ({ widgetId, icon, title, children, flexDirection }: WidgetBlockProps) => {
   return (
     <div className="widget-block" id={widgetId || ""}>
       {title && (
@@ -19,7 +20,9 @@ const WidgetBlock = ({ widgetId, icon, title, children }: WidgetBlockProps) => {
         </div>
       )}
 
-      <div className="widget-content">{children}</div>
+      <div className="widget-content" style={{ flexDirection }}>
+        {children}
+      </div>
     </div>
   );
 };

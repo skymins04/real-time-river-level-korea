@@ -13,6 +13,12 @@
     color: white;
     font-size: 14px;
     font-weight: lighter;
+    text-align: center;
+    word-break: break-all;
+
+    &.warning {
+      margin-bottom: 20px !important;
+    }
 
     a {
       margin-left: 0.5em;
