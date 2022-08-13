@@ -10,6 +10,7 @@ import { useRiverLevelData } from "@Hook";
 import i18n from "@i18n";
 
 import "./style.scss";
+import { koreaCities } from "@Lib/regions";
 
 const MainPage = () => {
   const { t } = useTranslation(["article", "region"]);
@@ -31,6 +32,20 @@ const MainPage = () => {
   const [regionDetailGraphDataKeyState, setRegionDetailGraphDataKey] = useState<string[]>([]);
   const [regionDetailGraphAxisBottomLegendState, setRegionDetailGraphAxisBottomLegendState] =
     useState<string>(t("article:ARTICLE_REGION_DETAIL_GRAPH_AXIS_BOTTOM_LEGEND"));
+  const getSortedSelectedCityRegionsKey = () =>
+    Object.keys(koreaCities[selectedCityState].regions).sort(
+      (a, b) =>
+        (koreaCities[selectedCityState].regions[b].averageRiverLevelRatio || 0) -
+        (koreaCities[selectedCityState].regions[a].averageRiverLevelRatio || 0),
+    );
+  const [cityDetailGraphDataState, setCityDetailGraphData] = useState<
+    | {
+        [key: string]: number | string;
+      }[]
+    | null
+  >(null);
+  const [cityDetailGraphDataKeyState, setCityDetailGraphDataKey] = useState<string[]>([]);
+
   const getRiverLevelData = useRiverLevelData();
 
   useEffect(() => {
@@ -53,10 +68,10 @@ const MainPage = () => {
 
   useEffect(() => {
     if (selectedRegionState && selectedRegionState?.averageRiverLevelRatio) {
-      const regionDetailGraphData: any = [];
+      const regionDetailGraphData: any[] = [];
       selectedRegionState.riverLevel.forEach(itm => {
         const data: any = {};
-        data["rivergauge"] = `[${t(`region:REGION_RIVER_${itm.riverName}`)}] ${t(
+        data["group"] = `[${t(`region:REGION_RIVER_${itm.riverName}`)}] ${t(
           `region:REGION_RIVERGAUGE_${itm.rivergaugeName}`,
         )}`;
         data[t("article:ARTICLE_REGION_DETAIL_GRAPH_KEY_1")] = itm.currentLevel;
@@ -77,6 +92,26 @@ const MainPage = () => {
       setRegionDetailGraphData(regionDetailGraphData);
     }
   }, [selectedRegionState, i18n.language]);
+
+  useEffect(() => {
+    const cityDetailGraphData: any[] = [];
+    for (const key of getSortedSelectedCityRegionsKey()) {
+      const avgRiverLevelRatio = koreaCities[selectedCity].regions[key].averageRiverLevelRatio;
+      if (avgRiverLevelRatio) {
+        const data: any = {};
+        data["group"] =
+          t(`region:REGION_${key}`).length < 5
+            ? t(`region:REGION_${key}`) + "ㅤㅤ"
+            : t(`region:REGION_${key}`);
+        data[t("article:ARTICLE_MAIN_GRATH_DESCRIPTION_TEXT_3")] = parseFloat(
+          (avgRiverLevelRatio * 100).toFixed(2),
+        );
+        cityDetailGraphData.push(data);
+      }
+    }
+    setCityDetailGraphDataKey([t("article:ARTICLE_MAIN_GRATH_DESCRIPTION_TEXT_3")]);
+    setCityDetailGraphData(cityDetailGraphData);
+  }, [koreaCities[selectedCity], riverLevelDataState, selectedCityState, i18n.language]);
 
   return (
     <>
@@ -153,26 +188,39 @@ const MainPage = () => {
                 height: "250px",
                 width: "100%",
                 paddingBottom: "10px",
+                margin: "10px 0",
               }}
             >
-              <div style={{ marginBottom: "10px" }}>관측계 별 하천 수위 그래프</div>
+              <div style={{ marginBottom: "10px" }}>
+                {t(`region:REGION_${selectedRegionState.guName}`)}{" "}
+                {t("article:ARTICLE_REGION_DETAIL_GRAPH_TITLE")}
+              </div>
               <ChartBar
                 maxValue={100}
                 keys={regionDetailGraphDataKeyState}
                 data={regionDetailGraphDataState}
                 colors={{
-                  "현재하천수위(m)": "rgb(128,150,255)",
-                  "계획홍수위(m)": "rgb(60, 95, 255)",
-                  "하천수위비율(%)": "rgb(255,200,128)",
-                  "current river level(m)": "rgb(128,150,255)",
-                  "planflood level(m)": "rgb(60, 95, 255)",
-                  "river level ratio(%)": "rgb(255,200,128)",
+                  "현재하천수위(m)": "rgb(156,173,255)",
+                  "계획홍수위(m)": "rgb(107,134,255)",
+                  "하천수위비율(%)": "rgb(250,172,150)",
+                  "current river level(m)": "rgb(156,173,255)",
+                  "planflood level(m)": "rgb(107,134,255)",
+                  "river level ratio(%)": "rgb(250,172,150)",
                 }}
                 axisBottomLegend={regionDetailGraphAxisBottomLegendState}
               />
             </div>
           ) : !selectedRegionState?.averageRiverLevelRatio ? (
-            <div>하천 수위 상세정보 없음</div>
+            <div
+              style={{
+                height: "250px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              하천 수위 상세정보 없음
+            </div>
           ) : (
             <LoadingSpinner />
           )}
@@ -184,7 +232,34 @@ const MainPage = () => {
             "article:ARTICLE_WIDGET_TITLE_DETAIL_GRAPH",
           )}`}
         >
-          <h1>준비중입니다.</h1>
+          {cityDetailGraphDataState ? (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "column",
+                height: "250px",
+                width: "100%",
+                paddingBottom: "10px",
+                margin: "10px 0",
+              }}
+            >
+              <div style={{ marginBottom: "10px" }}>
+                {t(`region:REGION_CITY_${selectedCityState.toUpperCase()}`)}{" "}
+                {t("article:ARTICLE_CITY_DETAIL_GRAPH_TITLE")}
+              </div>
+              <ChartBar
+                maxValue={100}
+                keys={cityDetailGraphDataKeyState}
+                data={cityDetailGraphDataState}
+                colors={"rgb(128,150,255)"}
+                direction={"horizontal"}
+              />
+            </div>
+          ) : (
+            <LoadingSpinner />
+          )}
         </WidgetBlock>
       </div>
     </>

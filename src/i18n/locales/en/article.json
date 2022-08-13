@@ -16,5 +16,7 @@
   "ARTICLE_REGION_DETAIL_GRAPH_KEY_1": "current river level(m)",
   "ARTICLE_REGION_DETAIL_GRAPH_KEY_2": "planflood level(m)",
   "ARTICLE_REGION_DETAIL_GRAPH_KEY_3": "river level ratio(%)",
-  "ARTICLE_REGION_DETAIL_GRAPH_AXIS_BOTTOM_LEGEND": "rivergauges"
+  "ARTICLE_REGION_DETAIL_GRAPH_TITLE": "River level graph by river level gauge",
+  "ARTICLE_REGION_DETAIL_GRAPH_AXIS_BOTTOM_LEGEND": "river level gauges",
+  "ARTICLE_CITY_DETAIL_GRAPH_TITLE": "region average river level ratio graph"
 }

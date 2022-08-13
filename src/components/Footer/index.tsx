@@ -8,7 +8,7 @@ const Footer = () => {
     <div className="footer">
       <div className="footer-content">
         🛠 GitHub Repo :
-        <a href="https://github.com/skymins04/river-level-seoul">
+        <a href="https://github.com/skymins04/real-time-river-level-korea">
           {t("footer:FOOTER_GITHUB_REPO_LINK")}
         </a>
       </div>

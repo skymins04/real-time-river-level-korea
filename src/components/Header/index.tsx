@@ -67,7 +67,7 @@ const Header = () => {
           </select>
           <button className="btn" onClick={clickRefresh}>
             <FontAwesomeIcon icon={faArrowRotateRight} />
-            새로고침
+            {t("header:HEADER_REFRESH")}
           </button>
         </div>
       </div>

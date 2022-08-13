@@ -4,34 +4,33 @@ interface ChartBarProps {
   data: Array<{ [key: string]: number | string }>;
   keys: Array<string>;
   maxValue?: number;
-  colors: Record<string, string>;
-  axisBottomLegend: string;
+  colors: Record<string, string> | string;
+  axisBottomLegend?: string;
+  direction?: "horizontal" | "vertical";
 }
 
-const ChartBar = ({ data, keys, maxValue, colors, axisBottomLegend }: ChartBarProps) => {
+const ChartBar = ({ data, keys, maxValue, colors, axisBottomLegend, direction }: ChartBarProps) => {
   const getColor = (
     bar: ComputedDatum<{
       [key: string]: string | number;
     }>,
-  ) => colors[bar.id];
+  ) => (typeof colors !== "string" ? colors[bar.id] : "blue");
 
   return (
     <ResponsiveBar
       maxValue={maxValue}
       data={data}
       keys={keys}
-      layout={"vertical"}
-      indexBy="rivergauge"
-      margin={{ top: 10, right: 30, bottom: 90, left: 30 }}
-      padding={0.3}
+      layout={direction || "vertical"}
+      indexBy="group"
+      margin={{ top: 10, right: 30, bottom: 90, left: direction === "horizontal" ? 100 : 30 }}
+      padding={0.25}
       groupMode="grouped"
       valueScale={{ type: "linear" }}
       indexScale={{ type: "band", round: true }}
-      colors={getColor}
-      borderColor={{
-        from: "color",
-        modifiers: [["darker", 1.6]],
-      }}
+      colors={typeof colors === "string" ? colors : getColor}
+      borderWidth={2}
+      borderColor={"#ffffff"}
       axisTop={null}
       axisRight={null}
       axisBottom={{
@@ -62,7 +61,7 @@ const ChartBar = ({ data, keys, maxValue, colors, axisBottomLegend }: ChartBarPr
           anchor: "bottom",
           direction: "row",
           justify: false,
-          translateX: 0,
+          translateX: direction === "horizontal" ? -35 : 0,
           translateY: 70,
           itemsSpacing: 2,
           itemWidth: 100,

@@ -111,6 +111,20 @@
   }
 }
 
+@media (max-width: 1000px) {
+  .sub-articles {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    .widget-block {
+      width: 100%;
+      max-width: 100%;
+      min-width: 100%;
+    }
+  }
+}
+
 @media (max-width: 767px) {
   .widget-block .info {
     display: block;
@@ -122,6 +136,8 @@
       width: 100%;
       max-width: 100%;
       display: flex;
+      justify-content: center;
+      align-items: center;
       flex-wrap: wrap;
       gap: 20px;
     }
@@ -172,10 +188,5 @@
       font-size: 12px;
       text-align: center;
     }
-  }
-  .sub-articles {
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
   }
 }
