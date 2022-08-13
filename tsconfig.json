@@ -37,7 +37,8 @@
       "@Component/*": ["src/components/*"],
       "@Hook": ["src/hooks"],
       "@Lib/*": ["src/libs/*"],
-      "@Redux": ["src/redux"]
+      "@Redux": ["src/redux"],
+      "@Layout": ["src/layouts/*"]
     } /* Specify a set of entries that re-map imports to additional lookup locations. */,
     // "rootDirs": [],                                   /* Allow multiple folders to be treated as one when resolving modules. */
     // "typeRoots": [],                                  /* Specify multiple folders that act like './node_modules/@types'. */

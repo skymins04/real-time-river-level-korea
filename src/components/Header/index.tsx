@@ -11,9 +11,12 @@ import "./style.scss";
 const Header = () => {
   const reduxDispatch = useDispatch();
   const getRiverLevelData = useRiverLevelData();
-  const { selectedCity } = useSelector((state: RootState) => ({
-    selectedCity: state.selectedCity,
-  }));
+  const { selectedCity } = useSelector((reducer: any) => {
+    const state: RootState = reducer["main"];
+    return {
+      selectedCity: state.selectedCity,
+    };
+  });
 
   const { t } = useTranslation(["header", "region"]);
 

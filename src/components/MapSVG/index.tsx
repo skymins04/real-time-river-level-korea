@@ -16,7 +16,10 @@ interface MapSVGProps {
 }
 
 const MapSVG = ({ riverData, selectedCityName }: MapSVGProps) => {
-  const { isMobile } = useSelector((state: RootState) => ({ isMobile: state.isMobile }));
+  const { isMobile } = useSelector((reducer: any) => {
+    const state: RootState = reducer["main"];
+    return { isMobile: state.isMobile };
+  });
   const [mouseoveredRegionState, setMouseoveredRegion] = useState<Region | null>(null);
   const [regionsState, setRegions] = useState<Regions>(koreaCities[selectedCityName]);
   const [regionNamesStore, setRegionNames] = useState<string[]>([]);

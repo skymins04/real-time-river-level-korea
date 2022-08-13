@@ -15,11 +15,14 @@ import { koreaCities } from "@Lib/regions";
 const MainPage = () => {
   const { t } = useTranslation(["article", "region"]);
 
-  const { selectedCity, selectedRegion, riverLevelData } = useSelector((state: RootState) => ({
-    selectedCity: state.selectedCity,
-    selectedRegion: state.selectedRegion,
-    riverLevelData: state.riverLevelData,
-  }));
+  const { selectedCity, selectedRegion, riverLevelData } = useSelector((reducer: any) => {
+    const state: RootState = reducer["main"];
+    return {
+      selectedCity: state.selectedCity,
+      selectedRegion: state.selectedRegion,
+      riverLevelData: state.riverLevelData,
+    };
+  });
   const [riverLevelDataState, setRiverLevelData] = useState<RiverLevelSeoulAPIResonse | null>(null);
   const [selectedCityState, setSelectedCity] = useState<CityName>(selectedCity);
   const [selectedRegionState, setSelectedRegion] = useState<Region | null>(selectedRegion);

@@ -1,13 +1,14 @@
 import { StrictMode } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
 import ReactDOM from "react-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Provider } from "react-redux";
 
 import i18n, { initI18n } from "@i18n";
 import reduxStore from "@Redux";
-import ResponsiveLayout from "./layouts/responsive.layout";
+import ResponsiveLayout from "@Layout/responsive.layout";
 import MainPage from "@Component/MainPage";
+
 import "./style.scss";
-import { Provider } from "react-redux";
 
 initI18n();
 const langHeader = i18n.getDataByLanguage("ko");
