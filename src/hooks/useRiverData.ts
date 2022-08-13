@@ -10,7 +10,7 @@ const useRiverLevelData = () => {
     if (city === "seoul") {
       axios({
         method: "GET",
-        url: `http://openAPI.seoul.go.kr:8088/${process.env["REACT_APP_RIVER_LEVEL_SEOUL_API_KEY"]}/json/ListRiverStageService/1/1000`,
+        url: process.env["REACT_APP_API_SERVER_URL"],
       }).then(res => {
         (res.data as RiverLevelSeoulAPIResonse).ListRiverStageService.row.forEach(itm => {
           itm.RIVER_NAME = itm.RIVER_NAME.trim();

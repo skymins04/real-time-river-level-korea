@@ -1,0 +1,4 @@
+#netlify.toml
+[build]
+  command = "yarn run build"
+  functions = "dist/functions"

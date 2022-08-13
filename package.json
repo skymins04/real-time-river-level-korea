@@ -8,8 +8,10 @@
   "license": "MIT",
   "scripts": {
     "start": "webpack serve --config webpack.dev.js --node-env development",
-    "start:build": "webpack --config webpack.prod.js --node-env production && yarn serve ./dist",
+    "start:build": "yarn serve ./dist",
+    "start:functions": "netlify dev",
     "build": "webpack --config webpack.prod.js --node-env production",
+    "build:functions": "tsc ./src/functions/*.ts --outDir ./dist/functions --skipLibCheck",
     "lint": "eslint --fix \"./src/**/*.{js,jsx,ts,tsx,json}\"",
     "format": "prettier --write \"./src/**/*.{js,jsx,ts,tsx,json,md}\""
   },
@@ -17,6 +19,7 @@
     "@fortawesome/fontawesome-svg-core": "^6.1.2",
     "@fortawesome/free-solid-svg-icons": "^6.1.2",
     "@fortawesome/react-fontawesome": "^0.2.0",
+    "@netlify/functions": "^1.1.0",
     "@nivo/bar": "^0.79.1",
     "@nivo/core": "^0.79.0",
     "axios": "^0.27.2",
@@ -71,6 +74,7 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "html-webpack-plugin": "^5.5.0",
     "mini-css-extract-plugin": "^2.6.1",
+    "netlify-cli": "^10.17.4",
     "prettier": "^2.7.1",
     "prop-types": "^15.8.1",
     "react-refresh": "^0.14.0",

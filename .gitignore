@@ -106,3 +106,5 @@ dist
 .env
 .env.*
 .DS_store
+# Local Netlify folder
+.netlify
