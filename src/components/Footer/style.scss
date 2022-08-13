@@ -1,7 +1,7 @@
 .footer {
   display: flex;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
   flex-direction: column;
   position: relative;
   width: 100%;
@@ -12,6 +12,7 @@
   .footer-content {
     color: white;
     font-size: 14px;
+    font-weight: lighter;
 
     a {
       margin-left: 0.5em;

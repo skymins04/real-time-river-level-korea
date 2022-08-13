@@ -10,6 +10,16 @@
 
 .info {
   animation: fade-in-opacity 0.4s ease-in-out;
+  font-weight: lighter;
+}
+
+.no-graph-data {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: lighter;
+  color: #ccc;
 }
 
 #main-graph {
@@ -136,10 +146,13 @@
       width: 100%;
       max-width: 100%;
       display: flex;
-      justify-content: center;
+      justify-content: flex-start;
       align-items: center;
       flex-wrap: wrap;
-      gap: 20px;
+
+      & > div {
+        margin: 2px 10px;
+      }
     }
   }
   .info-color-riverlevel {

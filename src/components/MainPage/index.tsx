@@ -174,58 +174,28 @@ const MainPage = () => {
         )}
       </WidgetBlock>
       <div className="sub-articles">
-        <WidgetBlock
-          widgetId="region-detail-graph"
-          icon={"📊"}
-          title={`${
-            selectedRegionState ? t(`region:REGION_${selectedRegionState.guName}`) : ""
-          } ${t("article:ARTICLE_WIDGET_TITLE_DETAIL_GRAPH")}`}
-        >
+        <WidgetBlock widgetId="region-detail-graph">
           {selectedRegionState && regionDetailGraphDataState ? (
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                flexDirection: "column",
-                height: "250px",
-                width: "100%",
-                paddingBottom: "10px",
-                margin: "10px 0",
+            <ChartBar
+              maxValue={100}
+              keys={regionDetailGraphDataKeyState}
+              data={regionDetailGraphDataState}
+              height={"250px"}
+              chartTitle={`${t(`region:REGION_${selectedRegionState.guName}`)} ${t(
+                "article:ARTICLE_REGION_DETAIL_GRAPH_TITLE",
+              )}`}
+              colors={{
+                "현재하천수위(m)": "rgb(156,173,255)",
+                "계획홍수위(m)": "rgb(107,134,255)",
+                "하천수위비율(%)": "rgb(250,172,150)",
+                "current river level(m)": "rgb(156,173,255)",
+                "planflood level(m)": "rgb(107,134,255)",
+                "river level ratio(%)": "rgb(250,172,150)",
               }}
-            >
-              <div style={{ marginBottom: "10px" }}>
-                {t(`region:REGION_${selectedRegionState.guName}`)}{" "}
-                {t("article:ARTICLE_REGION_DETAIL_GRAPH_TITLE")}
-              </div>
-              <ChartBar
-                maxValue={100}
-                keys={regionDetailGraphDataKeyState}
-                data={regionDetailGraphDataState}
-                colors={{
-                  "현재하천수위(m)": "rgb(156,173,255)",
-                  "계획홍수위(m)": "rgb(107,134,255)",
-                  "하천수위비율(%)": "rgb(250,172,150)",
-                  "current river level(m)": "rgb(156,173,255)",
-                  "planflood level(m)": "rgb(107,134,255)",
-                  "river level ratio(%)": "rgb(250,172,150)",
-                }}
-                axisBottomLegend={regionDetailGraphAxisBottomLegendState}
-              />
-            </div>
-          ) : !selectedRegionState?.averageRiverLevelRatio ? (
-            <div
-              style={{
-                height: "250px",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              하천 수위 상세정보 없음
-            </div>
+              axisBottomLegend={regionDetailGraphAxisBottomLegendState}
+            />
           ) : (
-            <LoadingSpinner />
+            selectedRegionState?.averageRiverLevelRatio && <LoadingSpinner />
           )}
         </WidgetBlock>
         <WidgetBlock
@@ -236,30 +206,17 @@ const MainPage = () => {
           )}`}
         >
           {cityDetailGraphDataState ? (
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                flexDirection: "column",
-                height: "250px",
-                width: "100%",
-                paddingBottom: "10px",
-                margin: "10px 0",
-              }}
-            >
-              <div style={{ marginBottom: "10px" }}>
-                {t(`region:REGION_CITY_${selectedCityState.toUpperCase()}`)}{" "}
-                {t("article:ARTICLE_CITY_DETAIL_GRAPH_TITLE")}
-              </div>
-              <ChartBar
-                maxValue={100}
-                keys={cityDetailGraphDataKeyState}
-                data={cityDetailGraphDataState}
-                colors={"rgb(128,150,255)"}
-                direction={"horizontal"}
-              />
-            </div>
+            <ChartBar
+              maxValue={100}
+              height={"250px"}
+              chartTitle={`${t(`region:REGION_CITY_${selectedCityState.toUpperCase()}`)} ${t(
+                "article:ARTICLE_CITY_DETAIL_GRAPH_TITLE",
+              )}`}
+              keys={cityDetailGraphDataKeyState}
+              data={cityDetailGraphDataState}
+              colors={"rgb(128,150,255)"}
+              direction={"horizontal"}
+            />
           ) : (
             <LoadingSpinner />
           )}
