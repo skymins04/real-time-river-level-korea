@@ -1,5 +1,11 @@
 const LoadingSpinner = () => {
-  return <img style={{ display: "block", margin: "auto" }} src="loading-spin.gif" alt="" />;
+  return (
+    <img
+      style={{ display: "block", margin: "auto" }}
+      src="https://cdn.jsdelivr.net/gh/skymins04/real-time-river-level-korea/public/loading-spin.gif"
+      alt=""
+    />
+  );
 };
 
 export default LoadingSpinner;
