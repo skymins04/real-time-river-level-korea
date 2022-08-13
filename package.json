@@ -10,7 +10,7 @@
     "start": "webpack serve --config webpack.dev.js --node-env development",
     "start:build": "yarn serve ./dist",
     "start:functions": "netlify dev",
-    "build": "webpack --config webpack.prod.js --node-env production",
+    "build": "webpack --config webpack.prod.js --node-env production && tsc ./src/functions/*.ts --outDir ./dist/functions --skipLibCheck",
     "build:functions": "tsc ./src/functions/*.ts --outDir ./dist/functions --skipLibCheck",
     "lint": "eslint --fix \"./src/**/*.{js,jsx,ts,tsx,json}\"",
     "format": "prettier --write \"./src/**/*.{js,jsx,ts,tsx,json,md}\""
