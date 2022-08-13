@@ -15,6 +15,10 @@
     min-height: 350px;
     margin: 0 auto 10px;
 
+    &:hover {
+      cursor: move;
+    }
+
     &.mobile {
       overflow: scroll !important;
       -ms-overflow-style: none !important;
@@ -43,7 +47,7 @@
           fill: #eee !important;
         }
         &:hover {
-          cursor: pointer;
+          cursor: pointer !important;
           filter: drop-shadow(0 0 5px #666);
         }
       }
