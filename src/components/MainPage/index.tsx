@@ -119,7 +119,7 @@ const MainPage = () => {
   const getDateTime = () => {
     const d = new Date();
     return `${d.getFullYear()}. ${d.getMonth()}. ${d.getDate()} - ${
-      d.getHours() / 12 < 1 ? "오전" : "오후"
+      d.getHours() / 12 < 1 ? t("article:ARTICLE_TIME_AM") : t("article:ARTICLE_TIME_PM")
     } ${d.getHours() % 12}:${d.getMinutes()}:${d.getSeconds()}`;
   };
 
@@ -128,9 +128,9 @@ const MainPage = () => {
       <WidgetBlock
         widgetId="main-graph"
         icon={"🔍"}
-        title={`${t(
-          "article:ARTICLE_WIDGET_TITLE_MAIN_GRAPH",
-        )} (마지막 업데이트: ${getDateTime()})`}
+        title={`${t("article:ARTICLE_WIDGET_TITLE_MAIN_GRAPH")} (${t(
+          "article:ARTICLE_LATEST_UPDATED_AT",
+        )}: ${getDateTime()})`}
       >
         {riverLevelDataState ? (
           <>
@@ -176,6 +176,7 @@ const MainPage = () => {
                 </span>
                 {t("article:ARTICLE_MAIN_GRATH_DESCRIPTION_TEXT_6")}
               </div>
+              <div className="text info">*지도를 확대/축소/드래그하여 보실 수 있습니다.</div>
             </div>
           </>
         ) : (

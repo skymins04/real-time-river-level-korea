@@ -18,5 +18,10 @@
   "ARTICLE_REGION_DETAIL_GRAPH_KEY_3": "하천수위비율(%)",
   "ARTICLE_REGION_DETAIL_GRAPH_TITLE": "관측계 별 하천 수위 그래프",
   "ARTICLE_REGION_DETAIL_GRAPH_AXIS_BOTTOM_LEGEND": "하천 수위 관측계",
-  "ARTICLE_CITY_DETAIL_GRAPH_TITLE": "지역 별 평균하천수위비율 그래프"
+  "ARTICLE_CITY_DETAIL_GRAPH_TITLE": "지역 별 평균하천수위비율 그래프",
+  "ARTICLE_TIME_AM": "오전",
+  "ARTICLE_TIME_PM": "오후",
+  "ARTICLE_LATEST_UPDATED_AT": "최신 업데이트",
+  "ARTICLE_ZOOM_IN": "확대",
+  "ARTICLE_ZOOM_OUT": "축소"
 }

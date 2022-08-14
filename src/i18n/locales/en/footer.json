@@ -1,5 +1,6 @@
 {
   "FOOTER_GITHUB_REPO_LINK": "Go to Repository",
   "FOOTER_SITE_LINK": "Go to Site",
-  "FOOTER_RIVER_LEVEL_SOEUL_API_SITE": "서울 열린데이터 광장 '서울시 하천 수위 현황' Open API"
+  "FOOTER_RIVER_LEVEL_SOEUL_API_SITE": "서울 열린데이터 광장 '서울시 하천 수위 현황' Open API",
+  "FOOTER_WARNING_TEXT": "The real-time river level/precipitation information provided by this site is self-statistic and visualized by post-processing public data for each province. This cannot be used as an official source material, and the user is responsible for any problems caused by it."
 }

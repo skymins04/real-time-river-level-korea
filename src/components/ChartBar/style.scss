@@ -12,6 +12,8 @@
     display: block;
     height: 1em;
     min-height: 1em;
+    font-size: 16px;
+    text-align: center;
   }
 
   .chart-bar-svg {
@@ -22,5 +24,16 @@
     width: 100%;
     min-width: 100%;
     max-width: 100%;
+  }
+}
+
+@media (max-width: 1000px) {
+  .chart-bar {
+    .chart-bar-title {
+      font-size: 12px;
+    }
+
+    .chart-bar-svg {
+    }
   }
 }

@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 
 import { useMouseMove } from "@Hook";
@@ -17,6 +18,8 @@ interface MapSVGProps {
 }
 
 const MapSVG = ({ riverData, selectedCityName }: MapSVGProps) => {
+  const { t } = useTranslation(["article"]);
+
   const { isMobile } = useSelector((reducer: any) => {
     const state: RootState = reducer["main"];
     return { isMobile: state.isMobile };
@@ -180,7 +183,7 @@ const MapSVG = ({ riverData, selectedCityName }: MapSVGProps) => {
       </div>
 
       <div className="zoom-control">
-        <span>축소</span>
+        <span>{t("article:ARTICLE_ZOOM_OUT")}</span>
         <input
           type="range"
           min={1}
@@ -189,8 +192,8 @@ const MapSVG = ({ riverData, selectedCityName }: MapSVGProps) => {
           value={zoomState}
           onChange={event => setZoom(parseFloat(event.target.value))}
         />
-        <span>확대</span>
-        <span className="zoom-magnification">{zoomState.toFixed(2)}배</span>
+        <span>{t("article:ARTICLE_ZOOM_IN")}</span>
+        <span className="zoom-magnification">x {zoomState.toFixed(2)}</span>
       </div>
     </div>
   );
