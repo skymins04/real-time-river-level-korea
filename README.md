@@ -11,7 +11,20 @@
 
 https://river-level.netlify.app
 
-![readme_1.png](/readme//readme_1.png)
+![readme_2.png](/readme//readme_2.png)
+
+### [2022.08.13 패치노트]
+
+- 서울지역에 한해 시군구 별 상세 하천 수위 정보 제공
+- 시도 선택 기능 제공
+- 번역 기능 제공
+
+### [2022.08.15 패치노트]
+
+- 지역별 수위 현황의 지도 그래프를 보다 쉽게 이용할 수 있도록 확대/축소/드래그 기능 추가
+- 시도, 시군구, 읍면동 단위로 열람할 수 있는 홍수위험지역지도 추가 (KBS 탐사보도부 환경부 홍수위험지역 지도 자료)
+- 카카오톡, 페이스북, 링크복사 공유하기 기능 추가
+- 디테일적인 디자인 및 오류 수정
 
 ## 📚 사용된 기술스택
 
@@ -25,10 +38,12 @@ https://river-level.netlify.app
 - Prettier
 - i18n
 - Git
+- Netlify
 
-## 📖 포함된 공공데이터 목록
+## 📖 포함된 공공데이터 / 참조데이터 출처 목록
 
 1. ["서울시 하천 수위 현황"](https://data.seoul.go.kr/dataList/OA-1167/S/1/datasetView.do): [서울 열린데이터 광장](https://data.seoul.go.kr/)에서 제공하는 서울시 각 하천별 수위 현황 Open API 입니다.
+2. ["KBS 탐사보도부 환경부 홍수위험지역 지도 자료"](https://tamsak.kbs.co.kr/floodriskmap/index.html)
 
 ## 👩‍💻🧑‍💻 프로젝트 참여자
 
