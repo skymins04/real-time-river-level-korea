@@ -27,14 +27,14 @@
     "i18next": "^21.9.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-draggable": "^4.4.5",
     "react-i18next": "^11.18.3",
     "react-redux": "^8.0.2",
     "react-responsive": "^9.0.0-beta.10",
     "react-router-dom": "^6.3.0",
     "redux": "^4.2.0",
     "redux-devtools-extension": "^2.13.9",
-    "redux-logger": "^3.0.6",
-    "topojson-client": "^3.1.0"
+    "redux-logger": "^3.0.6"
   },
   "devDependencies": {
     "@babel/core": "^7.18.10",
@@ -58,7 +58,6 @@
     "@types/redux": "^3.6.0",
     "@types/redux-devtools-extension": "^2.13.2",
     "@types/redux-logger": "^3.0.9",
-    "@types/topojson-client": "^3.1.1",
     "@typescript-eslint/eslint-plugin": "^5.32.0",
     "@typescript-eslint/parser": "^5.32.0",
     "babel-loader": "^8.2.5",

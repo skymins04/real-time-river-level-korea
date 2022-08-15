@@ -1,5 +1,6 @@
 {
   "FOOTER_GITHUB_REPO_LINK": "레포지토리 바로가기",
   "FOOTER_SITE_LINK": "사이트 바로가기",
-  "FOOTER_RIVER_LEVEL_SOEUL_API_SITE": "서울 열린데이터 광장 '서울시 하천 수위 현황' Open API"
+  "FOOTER_RIVER_LEVEL_SOEUL_API_SITE": "서울 열린데이터 광장 '서울시 하천 수위 현황' Open API",
+  "FOOTER_WARNING_TEXT": "본 사이트에서 제공하는 실시간 하천수위/강수량 정보는 각 시도 별 공공데이터를 후처리하여 자체적으로 통계 및 시각화된 자료입니다. 이는 공식적 근거 자료로써 활용될 수 없고 이로인해 발생된 문제의 책임은 사용자에게 있습니다."
 }

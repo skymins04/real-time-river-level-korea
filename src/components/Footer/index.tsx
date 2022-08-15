@@ -6,6 +6,7 @@ const Footer = () => {
   const { t } = useTranslation(["header", "footer"]);
   return (
     <div className="footer">
+      <div className="footer-content warning">⚠️ {t("footer:FOOTER_WARNING_TEXT")}</div>
       <div className="footer-content">
         🛠 GitHub Repo :
         <a href="https://github.com/skymins04/real-time-river-level-korea">
@@ -15,7 +16,6 @@ const Footer = () => {
       <div className="footer-content">
         👨‍💻 Project by Kang Min-su (BetaMan, skymin0417@gmail.com)
       </div>
-      <div className="footer-content footer-copyright">© 2022 {t("header:HEADER_TITLE")}</div>
     </div>
   );
 };

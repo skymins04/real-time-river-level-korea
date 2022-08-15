@@ -1,7 +1,7 @@
 .footer {
   display: flex;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
   flex-direction: column;
   position: relative;
   width: 100%;
@@ -10,8 +10,17 @@
   background-color: #121212;
 
   .footer-content {
+    width: 100%;
+    max-width: 1130px;
     color: white;
     font-size: 14px;
+    font-weight: lighter;
+    text-align: center;
+    word-break: break-all;
+
+    &.warning {
+      margin-bottom: 20px !important;
+    }
 
     a {
       margin-left: 0.5em;

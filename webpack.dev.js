@@ -1,5 +1,6 @@
 const { merge } = require("webpack-merge");
 const common = require("./webpack.common");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 const webpack = require("webpack");
 const dotenv = require("dotenv");
@@ -13,6 +14,9 @@ module.exports = merge(common, {
   },
   devtool: "eval-source-map",
   plugins: [
+    new HtmlWebpackPlugin({
+      template: path.resolve(__dirname, ".", "public", "index.dev.html"),
+    }),
     new webpack.DefinePlugin({
       "process.env": JSON.stringify(process.env),
     }),

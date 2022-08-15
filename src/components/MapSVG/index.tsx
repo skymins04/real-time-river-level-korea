@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 
 import { useMouseMove } from "@Hook";
@@ -9,18 +10,28 @@ import PopupRegionInfo from "@Component/PopupRegionInfo";
 import RegionNameSVGText from "./RegionNameSVGText";
 
 import "./style.scss";
+import CustomDraggable from "@Component/CustomDraggable";
 
 interface MapSVGProps {
   riverData: RiverLevelSeoulAPIResonse;
   selectedCityName: CityName;
+  isInit: boolean;
 }
 
-const MapSVG = ({ riverData, selectedCityName }: MapSVGProps) => {
-  const { isMobile } = useSelector((state: RootState) => ({ isMobile: state.isMobile }));
+const MapSVG = ({ riverData, selectedCityName, isInit }: MapSVGProps) => {
+  const { t } = useTranslation(["article"]);
+
+  const { isMobile, urlParams } = useSelector((reducer: any) => {
+    const state: RootState = reducer["main"];
+    return { isMobile: state.isMobile, urlParams: state.urlParams };
+  });
   const [mouseoveredRegionState, setMouseoveredRegion] = useState<Region | null>(null);
   const [regionsState, setRegions] = useState<Regions>(koreaCities[selectedCityName]);
   const [regionNamesStore, setRegionNames] = useState<string[]>([]);
+  const [zoomState, setZoom] = useState<number>(1);
+  const [isInitState, setIsInit] = useState<boolean>(isInit);
   const popupRegionInfoRef = useRef<HTMLDivElement>(null);
+  const svgRef = useRef();
   const mouseMoveHook = useMouseMove();
   const reduxDispatch = useDispatch();
 
@@ -34,6 +45,8 @@ const MapSVG = ({ riverData, selectedCityName }: MapSVGProps) => {
   }, [selectedCityName, regionsState.regions]);
 
   useEffect(() => {
+    setZoom(1);
+    if (!isMobile) (svgRef as any).current.setState({ x: 0, y: 0 });
     setRegions(() => {
       const newState = { ...koreaCities[selectedCityName] };
 
@@ -85,7 +98,10 @@ const MapSVG = ({ riverData, selectedCityName }: MapSVGProps) => {
           }
         }
       }
-      reduxDispatch({ type: "SELECT_REGION", selectedRegion: maxRegion });
+      reduxDispatch({
+        type: "SELECT_REGION",
+        selectedRegion: isInitState ? newState.regions[urlParams.sigungu] : maxRegion,
+      });
 
       return newState;
     });
@@ -103,6 +119,7 @@ const MapSVG = ({ riverData, selectedCityName }: MapSVGProps) => {
 
   // 지역 SVG path click event handler
   const clickRegion = (region: Region) => {
+    setIsInit(false);
     logger.debug("clicked region", region);
     reduxDispatch({ type: "SELECT_REGION", selectedRegion: region });
     window.scrollTo({
@@ -121,47 +138,69 @@ const MapSVG = ({ riverData, selectedCityName }: MapSVGProps) => {
           mouseY={mouseMoveHook.y}
         />
       )}
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        version="1.2"
-        baseProfile="tiny"
-        width={regionsState.svg.width}
-        height={regionsState.svg.height}
-        viewBox={`0 0 ${regionsState.svg.width} ${regionsState.svg.height}`}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        onMouseMove={mouseMoveHook.handler}
-      >
-        <g>
-          {regionNamesStore.map((itm, idx) => {
-            return (
-              <path
-                key={idx}
-                id={`svg-path-${itm}`}
-                ref={regionsState.regions[itm].target}
-                d={regionsState.regions[itm].svgPath}
-                onMouseEnter={() => mouseEnterRegion(regionsState.regions[itm])}
-                onMouseLeave={mouseLeaveRegion}
-                onClick={() => clickRegion(regionsState.regions[itm])}
-              />
-            );
-          })}
-          <use href={mouseoveredRegionState ? `#svg-path-${mouseoveredRegionState.guName}` : ""} />
-        </g>
-        <g>
-          {regionNamesStore.map((itm, idx) => {
-            return (
-              <RegionNameSVGText
-                key={idx}
-                x={regionsState.regions[itm].svgTextPos.x}
-                y={regionsState.regions[itm].svgTextPos.y}
-                regionName={itm}
-                averageRiverLevelRatio={regionsState.regions[itm].averageRiverLevelRatio}
-              ></RegionNameSVGText>
-            );
-          })}
-        </g>
-      </svg>
+      <div className={`svg-area ${isMobile ? "mobile" : ""}`}>
+        <CustomDraggable isMobile={isMobile} ref={svgRef}>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            version="1.2"
+            baseProfile="tiny"
+            width={`calc(100% * ${zoomState})`}
+            height={`calc(100% * ${zoomState})`}
+            viewBox={`0 0 ${regionsState.svg.width} ${regionsState.svg.height}`}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            onMouseMove={mouseMoveHook.handler}
+          >
+            <g>
+              <g>
+                {regionNamesStore.map((itm, idx) => {
+                  return (
+                    <path
+                      key={idx}
+                      id={`svg-path-${itm}`}
+                      ref={regionsState.regions[itm].target}
+                      d={regionsState.regions[itm].svgPath}
+                      onMouseEnter={() => mouseEnterRegion(regionsState.regions[itm])}
+                      onMouseLeave={mouseLeaveRegion}
+                      onClick={() => clickRegion(regionsState.regions[itm])}
+                    />
+                  );
+                })}
+                <use
+                  href={mouseoveredRegionState ? `#svg-path-${mouseoveredRegionState.guName}` : ""}
+                />
+              </g>
+              <g>
+                {regionNamesStore.map((itm, idx) => {
+                  return (
+                    <RegionNameSVGText
+                      key={idx}
+                      x={regionsState.regions[itm].svgTextPos.x}
+                      y={regionsState.regions[itm].svgTextPos.y}
+                      regionName={itm}
+                      averageRiverLevelRatio={regionsState.regions[itm].averageRiverLevelRatio}
+                    ></RegionNameSVGText>
+                  );
+                })}
+              </g>
+            </g>
+          </svg>
+        </CustomDraggable>
+      </div>
+
+      <div className="zoom-control">
+        <span>{t("article:ARTICLE_ZOOM_OUT")}</span>
+        <input
+          type="range"
+          min={1}
+          max={2}
+          step={0.0001}
+          value={zoomState}
+          onChange={event => setZoom(parseFloat(event.target.value))}
+        />
+        <span>{t("article:ARTICLE_ZOOM_IN")}</span>
+        <span className="zoom-magnification">x {zoomState.toFixed(2)}</span>
+      </div>
     </div>
   );
 };
