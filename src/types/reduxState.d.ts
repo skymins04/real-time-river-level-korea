@@ -3,4 +3,5 @@ interface RootState {
   selectedCity: CityName;
   selectedRegion: Region | null;
   riverLevelData: RiverLevelSeoulAPIResonse | null;
+  urlParams: { [key: string]: any };
 }

@@ -7,6 +7,18 @@ const reducer = (state: any, action: any) => {
       selectedCity: "seoul",
       selectedRegion: null,
       riverLevelData: null,
+      urlParams: (() => {
+        const params: { [key: string]: any } = {};
+        if (window.location.href.indexOf("?") !== -1) {
+          window.location.href
+            .split("?")[1]
+            .split("&")
+            .forEach(x => {
+              params[x.split("=")[0]] = decodeURIComponent(x.split("=")[1]);
+            });
+        }
+        return params;
+      })(),
     };
   }
 

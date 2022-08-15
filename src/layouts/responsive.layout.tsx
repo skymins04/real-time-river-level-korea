@@ -3,7 +3,7 @@ import { useMediaQuery } from "react-responsive";
 
 import DesktopLayout from "./desktop.layout";
 import MobileLayout from "./mobile.layout";
-import GoToTop from "@Component/GoToTop";
+import QuickMenu from "@Component/QuickMenu";
 
 const ResponsiveLayout = ({ children }: PropsWithChildren) => {
   const Desktop = () => {
@@ -19,7 +19,7 @@ const ResponsiveLayout = ({ children }: PropsWithChildren) => {
     <>
       <Desktop />
       <Mobile />
-      <GoToTop />
+      <QuickMenu />
     </>
   );
 };

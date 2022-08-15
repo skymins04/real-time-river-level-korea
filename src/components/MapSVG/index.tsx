@@ -15,19 +15,21 @@ import CustomDraggable from "@Component/CustomDraggable";
 interface MapSVGProps {
   riverData: RiverLevelSeoulAPIResonse;
   selectedCityName: CityName;
+  isInit: boolean;
 }
 
-const MapSVG = ({ riverData, selectedCityName }: MapSVGProps) => {
+const MapSVG = ({ riverData, selectedCityName, isInit }: MapSVGProps) => {
   const { t } = useTranslation(["article"]);
 
-  const { isMobile } = useSelector((reducer: any) => {
+  const { isMobile, urlParams } = useSelector((reducer: any) => {
     const state: RootState = reducer["main"];
-    return { isMobile: state.isMobile };
+    return { isMobile: state.isMobile, urlParams: state.urlParams };
   });
   const [mouseoveredRegionState, setMouseoveredRegion] = useState<Region | null>(null);
   const [regionsState, setRegions] = useState<Regions>(koreaCities[selectedCityName]);
   const [regionNamesStore, setRegionNames] = useState<string[]>([]);
   const [zoomState, setZoom] = useState<number>(1);
+  const [isInitState, setIsInit] = useState<boolean>(isInit);
   const popupRegionInfoRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef();
   const mouseMoveHook = useMouseMove();
@@ -96,7 +98,10 @@ const MapSVG = ({ riverData, selectedCityName }: MapSVGProps) => {
           }
         }
       }
-      reduxDispatch({ type: "SELECT_REGION", selectedRegion: maxRegion });
+      reduxDispatch({
+        type: "SELECT_REGION",
+        selectedRegion: isInitState ? newState.regions[urlParams.sigungu] : maxRegion,
+      });
 
       return newState;
     });
@@ -114,6 +119,7 @@ const MapSVG = ({ riverData, selectedCityName }: MapSVGProps) => {
 
   // 지역 SVG path click event handler
   const clickRegion = (region: Region) => {
+    setIsInit(false);
     logger.debug("clicked region", region);
     reduxDispatch({ type: "SELECT_REGION", selectedRegion: region });
     window.scrollTo({
