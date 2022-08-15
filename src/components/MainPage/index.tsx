@@ -1,3 +1,4 @@
+/* eslint-disable import/no-unresolved */
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
@@ -324,7 +325,7 @@ const MainPage = () => {
                 </span>
                 {t("article:ARTICLE_MAIN_GRATH_DESCRIPTION_TEXT_6")}
               </div>
-              <div className="text info">*지도를 확대/축소/드래그하여 보실 수 있습니다.</div>
+              <div className="text info">*{t("article:ARTICLE_MAIN_GRATH_DESCRIPTION_TEXT_7")}</div>
             </div>
           </>
         ) : (
@@ -362,7 +363,7 @@ const MainPage = () => {
               />
             </>
           ) : !selectedRegionState?.averageRiverLevelRatio ? (
-            <div className="no-graph-data">선택된 지역은 하천수위정보가 없습니다</div>
+            <div className="no-graph-data">{t("article:ARTICLE_REGION_DETAIL_GRAPH_NO_DATA")}</div>
           ) : (
             selectedRegionState?.averageRiverLevelRatio && <LoadingSpinner />
           )}
@@ -394,14 +395,14 @@ const MainPage = () => {
       <WidgetBlock
         widgetId={"flood-risk-map-widget"}
         icon={"🗺"}
-        title={"홍수위험지역지도"}
+        title={t("article:ARITLCE_FLOOD_RISK_MAP_WIDGET_TITLE")}
         rightArea={
           <a
             href="https://tamsak.kbs.co.kr/floodriskmap/index.html"
             target="_blank"
             rel="noreferrer"
           >
-            출처: KBS 탐사보도부 환경부 홍수위험지역 지도 자료
+            {t("article:ARITLCE_FLOOD_RISK_MAP_WIDGET_TITLE_RIGHT_AREA")}
           </a>
         }
       >
@@ -423,7 +424,7 @@ const MainPage = () => {
             <option value="경기도">경기도</option>
             <option value="강원도">강원도</option>
             <option value="충청북도">충청북도</option>
-            <option value="충청북도">ㅊ</option>
+            <option value="충청남도">충청남도</option>
             <option value="전라북도">전라북도</option>
             <option value="전라남도">전라남도</option>
             <option value="경상북도">경상북도</option>
@@ -460,34 +461,38 @@ const MainPage = () => {
         </div>
         <ImageViewer
           imgs={floodRiskMapURLsState}
-          noImageText={"선택한 지역에 해당하는 홍수위험지역 지도 이미지가 없습니다."}
+          noImageText={t("article:ARITLCE_FLOOD_RISK_MAP_WIDGET_NO_IMAGE_TEXT")}
         />
         {floodRiskMapURLsState.length !== 0 && (
           <div className="info-color">
             <div className="info-color-content">
               <div className="icon" style={{ backgroundColor: "#FFCC00" }}></div>
-              <div className="text">침수심 0.5m 이하 구역</div>
+              <div className="text">{t("article:ARITLCE_FLOOD_RISK_MAP_WIDGET_INFO_1")}</div>
             </div>
             <div className="info-color-content">
               <div className="icon" style={{ backgroundColor: "#FFF559" }}></div>
-              <div className="text">침수심 0.5 ~ 1m 구역</div>
+              <div className="text">{t("article:ARITLCE_FLOOD_RISK_MAP_WIDGET_INFO_2")}</div>
             </div>
             <div className="info-color-content">
               <div className="icon" style={{ backgroundColor: "#35D3FF" }}></div>
-              <div className="text">침수심 1m ~ 2m 구역</div>
+              <div className="text">{t("article:ARITLCE_FLOOD_RISK_MAP_WIDGET_INFO_3")}</div>
             </div>
             <div className="info-color-content">
               <div className="icon" style={{ backgroundColor: "#C142FF" }}></div>
-              <div className="text">침수심 2m ~ 5m 구역</div>
+              <div className="text">{t("article:ARITLCE_FLOOD_RISK_MAP_WIDGET_INFO_4")}</div>
             </div>
             <div className="info-color-content">
               <div className="icon" style={{ backgroundColor: "#FF275A" }}></div>
-              <div className="text">침수심 5m 이상 구역</div>
+              <div className="text">{t("article:ARITLCE_FLOOD_RISK_MAP_WIDGET_INFO_5")}</div>
             </div>
           </div>
         )}
       </WidgetBlock>
-      <WidgetBlock widgetId="share-widget" icon={"🔗"} title={"공유하기"}>
+      <WidgetBlock
+        widgetId="share-widget"
+        icon={"🔗"}
+        title={t("article:ARTICLE_SHARE_WIDGET_TITLE")}
+      >
         <div className="share-btns">
           <div className="btn kakao-share-btn" onClick={kakaoShare} role="presentation">
             <img src={kakaotalkIcon} alt="" />
@@ -503,7 +508,7 @@ const MainPage = () => {
             className="btn copy-share-btn"
             onClick={async () => {
               await navigator.clipboard.writeText(getShareLink());
-              alert("클립보드에 복사되었습니다!\nCtrl+V로 붙여넣으세요 :)");
+              alert(t("article:ARTICLE_SHARE_WIDGET_COPY_MSG"));
             }}
             aria-hidden="true"
           >
