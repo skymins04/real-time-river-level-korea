@@ -10,9 +10,13 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model APIKeys {
+model riverlevel_api_key {
   no Int @default(autoincrement()) @unique
   api_key String @id
   api_secret String
+  role String
+  owner String
+  description String?
+  enable Boolean @default(true)
   issue_data DateTime @default(now())
 }

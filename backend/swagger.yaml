@@ -2,10 +2,10 @@ openapi: 3.0.0
 info:
   version: 1.0.0
   title: real-time-river-level-korea-api
-  description: "실시한 하천 수위 현황 API 명세 문서"
+  description: '실시한 하천 수위 현황 API 명세 문서'
 tags:
   - name: auth
-    description: API key / API secret 으로 발급된 JWT Bearer 토큰 인증 관련 기능
+    description: API 접근 인증 관련 기능
   - name: riverlevel
     description: 하천수위정보 관련 기능
 components:
@@ -15,7 +15,25 @@ components:
       scheme: bearer
       bearerFormat: JWT
   schemas:
-    JWT_token:
+    api_key_set_schema:
+      type: object
+      description: |
+        API key + API secret set schema
+      required:
+        - api_key
+        - api_secret
+      properties:
+        api_key:
+          type: string
+          description: |
+            대문자, 숫자 포함 '-' 제외 28자 조합 문자열(7자 단위로 '-'로 구분)
+          example: 1EEA6DC-JAM4DP2-PHVYPBN-V0XCJ9X
+        api_secret:
+          type: string
+          description: |
+            대문자, 숫자 포함 '-' 제외 28자 조합 문자열(7자 단위로 '-'로 구분)
+          example: 1EEA6DC-JAM4DP2-PHVYPBN-V0XCJ9X
+    JWT_token_set_schema:
       type: object
       description: |
         Access JWT Token과 Refresh JWT Token 반환 형식
@@ -26,7 +44,7 @@ components:
         access_token:
           type: string
           description: |
-            API 이용 접근 용 Token  
+            API 이용 접근 용 JWT Token  
 
             발급 후 아래와 같이 HTTP header Authorization 항목에 Bearer token으로 포함하세요.  
 
@@ -37,7 +55,7 @@ components:
         refresh_token:
           type: string
           description: |
-            Access Token 재발급 용 Token
+            Access Token 재발급 용 JWT Token
           example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
 
     sido_param:
@@ -75,16 +93,28 @@ components:
       type: object
       description: |
         하천수위정보 반환 형식
+      required:
+        - sido_name
+        - sigungu_length
+        - sigungu
       properties:
         sido_name:
           type: string
+          description: |
+            요청한 "시도"명
         sigungu_length:
           type: integer
+          description: |
+            요청한 "시도" 하위의 "시군구" 개수
           format: int32
         sigungu:
           type: object
+          description: |
+            요청한 "시도" 하위의 "시군구" 모음
           additionalProperties:
             type: object
+            description: |
+              "시군구" 객체
             required:
               - sigungu_name
               - average_river_level_ratio
@@ -93,18 +123,28 @@ components:
             properties:
               sigungu_name:
                 type: string
+                description: |
+                  "시군구"명
               average_river_level_ratio:
                 type: number
+                description: |
+                  "시군구"의 평균하천수위비율
                 format: double
               rivergauge_length:
                 type: integer
+                description: |
+                  "시군구" 내의 하천수위 관측계 개수
                 format: int32
               rivergauge:
                 type: object
+                description: |
+                  "시군구" 내의 하천수위 관측계 모음
                 additionalProperties:
                   type: array
+                  description: 하천수위 관측계의 하천수위관측 데이터 배열
                   items:
                     type: object
+                    description: 하천수위 관측계의 하천수위관측 데이터
                     required:
                       - timestamp
                       - river_name
@@ -116,24 +156,82 @@ components:
                     properties:
                       timestamp:
                         type: string
+                        description: 관측일시
                         format: date-time
                       river_name:
                         type: string
+                        description: 하천명
                       rivergauge_name:
                         type: string
+                        description: 관측계명
                       current_level:
                         type: number
+                        description: 현재하천수위(m)
                         format: double
                       planflood_level:
                         type: number
+                        description: 계획홍수위(m)
                         format: double
                       river_level_ratio:
                         type: number
+                        description: 하천수위비율(현채하천수위 ÷ 계획홍수위)
                         format: double
 
-security:
-  - bearerAuth: []
 paths:
+  /auth/register:
+    post:
+      tags:
+        - auth
+      summary: 신규 API key / API secret 발급
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - role
+                - owner
+                - admin_key
+              properties:
+                role:
+                  type: string
+                  description: |
+                    API 사용허가영역 (","를 통해 구문하여 복수 개의 사용허가영역 적용 가능)
+                    |  사용허가영역 |                  설명                      |
+                    | ---------- | ----------------------------------------- |
+                    | riverlevel | 하천수위정보 API를 이용할 수 있도록 허용된 분류입니다. |
+                  enum: [riverlevel]
+                  example: riverlevel
+                owner:
+                  type: string
+                  description: |
+                    API key set 소유자명  
+                    대문자, 소문자, 숫자 내에서 3자 이상 20자 이하 조합
+                  example: honggildong
+                admin_key:
+                  type: string
+                  description: |
+                    관리자 비밀키
+                  example: ADMIN_SECRET_KEY
+                description:
+                  type: string
+                  description: 해당 API key set의 설명
+                  example: honggildong's API key set
+
+      responses:
+        '200':
+          description: 요청 성공
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/api_key_set_schema'
+        '400':
+          description: 잘못된 요청
+        '401':
+          description: 인증 실패
+        '5XX':
+          description: 내부 오류
+
   /auth/signin:
     post:
       tags:
@@ -144,24 +242,19 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                api_key:
-                  type: string
-                  example: 1EEA6DC-JAM4DP2-PHVYPBN-V0XCJ9X
-                api_secret:
-                  type: string
-                  example: 1EEA6DC-JAM4DP2-PHVYPBN-V0XCJ9X
+              $ref: '#/components/schemas/api_key_set_schema'
       responses:
-        "200":
+        '200':
           description: 인증 성공
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/JWT_token"
-        "400":
+                $ref: '#/components/schemas/JWT_token_set_schema'
+        '400':
           description: 잘못된 요청
-        "5XX":
+        '401':
+          description: 인증 실패
+        '5XX':
           description: 내부 오류
 
   /auth/refresh:
@@ -175,20 +268,22 @@ paths:
           application/json:
             schema:
               type: object
+              required:
+                - refresh_token
               properties:
                 refresh_tokrn:
                   type: string
                   example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
       responses:
-        "200":
+        '200':
           description: 인증 성공
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/JWT_token"
-        "400":
+                $ref: '#/components/schemas/JWT_token_set_schema'
+        '400':
           description: 잘못된 요청
-        "5XX":
+        '5XX':
           description: 내부 오류
 
   /riverlevel/{sido}:
@@ -198,17 +293,19 @@ paths:
       summary: 요청한 "시도" 내 모든 "시군구"의 관측계 별 하천수위 정보
       description: |
         파라미터 **"sido"**를 통해 모든 "시군구"의 관측계 별 하천수위 정보를 가져올 "시도"를 지정할 수 있습니다.
+      security:
+        - bearerAuth: []
       parameters:
         - in: path
           name: sido
           required: true
           schema:
-            $ref: "#/components/schemas/sido_param"
+            $ref: '#/components/schemas/sido_param'
           description: |
             요청할 "시도"의 한글표기(접미사 표현까지 기입)  
             ex) 서울특별시, 세종특별자치시, 경상북도, 제주특별자치도
       responses:
-        "200":
+        '200':
           description: |
             요청 성공  
             각 "시군구" 안에는 관측소 별 하천수위 정보가 포함됩니다.  
@@ -216,7 +313,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/river_level_response"
+                $ref: '#/components/schemas/river_level_response'
               example:
                 sido_name: 서울특별시
                 sigungu_length: 2
@@ -227,14 +324,14 @@ paths:
                     riverguage_length: 2
                     riverguage:
                       성동교:
-                        - timestamp: "2022-08-17T13:30:15Z"
+                        - timestamp: '2022-08-17T13:30:15Z'
                           river_name: 중량천
                           rivergauge_name: 성동교
                           current_level: 4.96
                           planflood_level: 17.05
                           river_level_ratio: 0.29032258
                       마장2교:
-                        - timestamp: "2022-08-17T13:30:15Z"
+                        - timestamp: '2022-08-17T13:30:15Z'
                           river_name: 청계천
                           rivergauge_name: 마장2교
                           current_level: 8.3
@@ -245,17 +342,17 @@ paths:
                     average_river_level_ratio: 0.76339869
                     riverguage_length: 1
                     riverguage:
-                      - timestamp: "2022-08-17T13:30:15Z"
+                      - timestamp: '2022-08-17T13:30:15Z'
                         river_name: 홍제천
                         rivergauge_name: 성산2교
                         current_level: 11.68
                         planflood_level: 15.3
                         river_level_ratio: 0.76339869
-        "400":
+        '400':
           description: 잘못된 요청
-        "401":
+        '401':
           description: 잘못된 인증 정보
-        "5XX":
+        '5XX':
           description: 내부 오류
 
   /riverlevel/{sido}/{sigungu}:
@@ -265,12 +362,14 @@ paths:
       summary: 요청한 "시도" 내 특정 "시군구"의 관측계 별 하천수위 정보
       description: |
         파라미터 **"sido"**와 **"sigungu"**를 통해 관측계 별 하천수위 정보를 가져올 "시도"와 "시군구"를 지정할 수 있습니다.
+      security:
+        - bearerAuth: []
       parameters:
         - in: path
           name: sido
           required: true
           schema:
-            $ref: "#/components/schemas/sido_param"
+            $ref: '#/components/schemas/sido_param'
           description: |
             요청할 "시도"의 한글표기(접미사 표현까지 기입)  
             ex) 서울특별시, 세종특별자치시, 경상북도, 제주특별자치도
@@ -278,13 +377,13 @@ paths:
           name: sigungu
           required: true
           schema:
-            $ref: "#/components/schemas/sigungu_param"
-          example: "성동구"
+            $ref: '#/components/schemas/sigungu_param'
+          example: '성동구'
           description: |
             요청할 "시도" 하위 특정 "시군구"의 한글표기(접미사 표현까지 기입)
             (**주의**: "시도" 하위에 존재하지 않는 "시군구"를 요청할 경우 400 반환)
       responses:
-        "200":
+        '200':
           description: |
             요청 성공  
             요청한 "시도" 하위 특정 "시군구" 하천들의 수위정보만 반환한다.  
@@ -292,7 +391,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/river_level_response"
+                $ref: '#/components/schemas/river_level_response'
               example:
                 sido_name: 서울특별시
                 average_river_level_ratio: 0.9
@@ -304,75 +403,74 @@ paths:
                     rivergauge_length: 2
                     rivergauge:
                       성동교:
-                        - timestamp: "2022-08-17T13:10:15Z"
+                        - timestamp: '2022-08-17T13:10:15Z'
                           river_name: 중량천
                           rivergauge_name: 성동교
                           current_level: 4.96
                           planflood_level: 17.05
                           river_level_ratio: 0.29032258
-                        - timestamp: "2022-08-17T13:15:15Z"
+                        - timestamp: '2022-08-17T13:15:15Z'
                           river_name: 중량천
                           rivergauge_name: 성동교
                           current_level: 4.96
                           planflood_level: 17.05
                           river_level_ratio: 0.29032258
-                        - timestamp: "2022-08-17T13:20:15Z"
+                        - timestamp: '2022-08-17T13:20:15Z'
                           river_name: 중량천
                           rivergauge_name: 성동교
                           current_level: 4.96
                           planflood_level: 17.05
                           river_level_ratio: 0.29032258
-                        - timestamp: "2022-08-17T13:25:15Z"
+                        - timestamp: '2022-08-17T13:25:15Z'
                           river_name: 중량천
                           rivergauge_name: 성동교
                           current_level: 4.96
                           planflood_level: 17.05
                           river_level_ratio: 0.29032258
-                        - timestamp: "2022-08-17T13:30:15Z"
+                        - timestamp: '2022-08-17T13:30:15Z'
                           river_name: 중량천
                           rivergauge_name: 성동교
                           current_level: 4.96
                           planflood_level: 17.05
                           river_level_ratio: 0.29032258
                       마장2교:
-                        - timestamp: "2022-08-17T13:10:15Z"
+                        - timestamp: '2022-08-17T13:10:15Z'
                           river_name: 청계천
                           rivergauge_name: 마장2교
                           current_level: 8.3
                           planflood_level: 17.05
                           river_level_ratio: 0.48680351
-                        - timestamp: "2022-08-17T13:15:15Z"
+                        - timestamp: '2022-08-17T13:15:15Z'
                           river_name: 청계천
                           rivergauge_name: 마장2교
                           current_level: 8.3
                           planflood_level: 17.05
                           river_level_ratio: 0.48680351
-                        - timestamp: "2022-08-17T13:20:15Z"
+                        - timestamp: '2022-08-17T13:20:15Z'
                           river_name: 청계천
                           rivergauge_name: 마장2교
                           current_level: 8.3
                           planflood_level: 17.05
                           river_level_ratio: 0.48680351
-                        - timestamp: "2022-08-17T13:25:15Z"
+                        - timestamp: '2022-08-17T13:25:15Z'
                           river_name: 청계천
                           rivergauge_name: 마장2교
                           current_level: 8.3
                           planflood_level: 17.05
                           river_level_ratio: 0.48680351
-                        - timestamp: "2022-08-17T13:30:15Z"
+                        - timestamp: '2022-08-17T13:30:15Z'
                           river_name: 청계천
                           rivergauge_name: 마장2교
                           current_level: 8.3
                           planflood_level: 17.05
                           river_level_ratio: 0.48680351
-        "400":
+        '400':
           description: 잘못된 요청
-        "401":
+        '401':
           description: 잘못된 인증 정보
-        "5XX":
+        '5XX':
           description: 내부 오류
 
 servers:
-  # Added by API Auto Mocking Plugin
-  - description: SwaggerHub API Auto Mocking
-    url: https://virtserver.swaggerhub.com/SKYMIN0417/real-time-river-level-korea-api/1.0.0
+  - description: localhost
+    url: http://localhost:3000
