@@ -3,10 +3,14 @@ import { PrismaService } from 'src/prisma.service';
 import { generateApiKey } from 'generate-api-key';
 import { AuthRegisterBodyDTO } from './dto/auth-register-body.dto';
 import { AuthSigninBodyDTO } from './dto/auth-signin-body.dto';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly jwtService: JwtService,
+  ) {}
 
   async register(body: AuthRegisterBodyDTO) {
     if (process.env['AUTH_ADMIN_SECRET_KEY'] === body.admin_key) {
@@ -31,8 +35,14 @@ export class AuthService {
     const apiKeyRow = await this.prismaService.riverlevel_api_key.findUnique({
       where: { api_key: body.api_key },
     });
-    if (apiKeyRow && apiKeyRow.api_secret === body.api_secret) {
-      return true;
+    if (
+      apiKeyRow &&
+      apiKeyRow.api_secret === body.api_secret &&
+      apiKeyRow.enable
+    ) {
+      const accessToken = await this.jwtService.sign({ role: apiKeyRow.role });
+
+      return { accessToken };
     }
     throw new UnauthorizedException();
   }
