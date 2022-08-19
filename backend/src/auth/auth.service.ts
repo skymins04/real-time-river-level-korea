@@ -40,9 +40,16 @@ export class AuthService {
       apiKeyRow.api_secret === body.api_secret &&
       apiKeyRow.enable
     ) {
-      const accessToken = await this.jwtService.sign({ role: apiKeyRow.role });
+      const accessToken = await this.jwtService.sign(
+        { role: apiKeyRow.role },
+        { expiresIn: '1h', secret: process.env['JWT_SECRET_KEY'] },
+      );
+      const refeshToken = await this.jwtService.sign(
+        { role: apiKeyRow.role },
+        { expiresIn: '7d', secret: process.env['JWT_SECRET_KEY'] },
+      );
 
-      return { accessToken };
+      return { accessToken, refeshToken };
     }
     throw new UnauthorizedException();
   }

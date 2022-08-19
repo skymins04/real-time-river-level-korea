@@ -1,18 +1,129 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
+import { AuthController } from './auth.controller';
+import { PrismaService } from '../prisma.service';
+import { JwtAccessStrategy } from './strategies/auth.jwt.access.strategy';
+import { PassportModule } from '@nestjs/passport';
+import { JwtModule } from '@nestjs/jwt';
+import { AuthRegisterBodyDTO } from './dto/auth-register-body.dto';
+import { AuthSigninBodyDTO } from './dto/auth-signin-body.dto';
 
 describe('AuthService', () => {
-  let service: AuthService;
+  let authService: AuthService;
+  let prismaService: PrismaService;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [AuthService],
+      imports: [PassportModule, JwtModule],
+      controllers: [AuthController],
+      providers: [AuthService, PrismaService, JwtAccessStrategy],
     }).compile();
 
-    service = module.get<AuthService>(AuthService);
+    authService = module.get<AuthService>(AuthService);
+    prismaService = module.get<PrismaService>(PrismaService);
+  });
+
+  afterAll(async () => {
+    await prismaService.riverlevel_api_key.deleteMany({
+      where: { description: 'jest tested' },
+    });
   });
 
   it('should be defined', () => {
-    expect(service).toBeDefined();
+    expect(authService).toBeDefined();
+    expect(prismaService).toBeDefined();
+  });
+
+  describe('register', () => {
+    it('should be defined', () => {
+      expect(authService.register).toBeDefined();
+    });
+
+    it('should be create new api key set', async () => {
+      const body: AuthRegisterBodyDTO = {
+        admin_key: process.env['AUTH_ADMIN_SECRET_KEY'],
+        role: 'riverlevel',
+        owner: 'testuser',
+        description: 'jest tested',
+      };
+
+      const beforeAPIKeysLength = (
+        await prismaService.riverlevel_api_key.findMany()
+      ).length;
+      const newAPIKeySet = await authService.register(body);
+      const afterAPIKeysLength = (
+        await prismaService.riverlevel_api_key.findMany()
+      ).length;
+
+      expect(afterAPIKeysLength).toBe(beforeAPIKeysLength + 1);
+      expect(newAPIKeySet.api_key).toBeDefined();
+      expect(typeof newAPIKeySet.api_key).toBe(typeof '');
+      expect(newAPIKeySet.api_secret).toBeDefined();
+      expect(typeof newAPIKeySet.api_secret).toBe(typeof '');
+    });
+
+    it('should throw UnauthorizedException', async () => {
+      let error = null;
+      try {
+        const body: AuthRegisterBodyDTO = {
+          admin_key: '',
+          role: 'riverlevel',
+          owner: 'testuser',
+          description: 'jest tested',
+        };
+        await authService.register(body);
+      } catch (e) {
+        error = e;
+        expect(e.message).toBe('Unauthorized');
+      }
+      expect(error).not.toBeNull();
+    });
+  });
+
+  describe('signin', () => {
+    it('should be defined', () => {
+      expect(authService.signin).toBeDefined();
+    });
+
+    it('should be return JWT tokens', async () => {
+      const body: AuthSigninBodyDTO = {
+        api_key: 'YM4Y74Q-JXFEW2I-SETD5UI-AJFVGVY',
+        api_secret: 'IF7MM6Q-PP5EQWA-VT324VY-OP3VU3Y',
+      };
+      const jwtSet = await authService.signin(body);
+      expect(jwtSet.accessToken).toBeDefined();
+      expect(typeof jwtSet.accessToken).toBe(typeof '');
+      expect(jwtSet.refeshToken).toBeDefined();
+      expect(typeof jwtSet.refeshToken).toBe(typeof '');
+    });
+
+    it('should throw UnauthorizedExeption', async () => {
+      let error = null;
+      try {
+        const body: AuthSigninBodyDTO = {
+          api_key: '',
+          api_secret: 'IF7MM6Q-PP5EQWA-VT324VY-OP3VU3Y',
+        };
+        await authService.signin(body);
+      } catch (e) {
+        error = e;
+        expect(e.message).toBe('Unauthorized');
+      }
+      expect(error).not.toBeNull();
+      error = null;
+
+      try {
+        const body: AuthSigninBodyDTO = {
+          api_key: 'YM4Y74Q-JXFEW2I-SETD5UI-AJFVGVY',
+          api_secret: '',
+        };
+        await authService.signin(body);
+      } catch (e) {
+        error = e;
+        expect(e.message).toBe('Unauthorized');
+      }
+      expect(error).not.toBeNull();
+      error = null;
+    });
   });
 });
