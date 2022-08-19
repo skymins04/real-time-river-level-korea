@@ -7,6 +7,7 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthRegisterBodyDTO } from './dto/auth-register-body.dto';
 import { AuthSigninBodyDTO } from './dto/auth-signin-body.dto';
+import { AuthRefreshBodyDTO } from './dto/auth-refresh-body.dto';
 
 describe('AuthService', () => {
   let authService: AuthService;
@@ -91,10 +92,10 @@ describe('AuthService', () => {
         api_secret: 'IF7MM6Q-PP5EQWA-VT324VY-OP3VU3Y',
       };
       const jwtSet = await authService.signin(body);
-      expect(jwtSet.accessToken).toBeDefined();
-      expect(typeof jwtSet.accessToken).toBe(typeof '');
-      expect(jwtSet.refeshToken).toBeDefined();
-      expect(typeof jwtSet.refeshToken).toBe(typeof '');
+      expect(jwtSet.access_token).toBeDefined();
+      expect(typeof jwtSet.access_token).toBe(typeof '');
+      expect(jwtSet.refresh_token).toBeDefined();
+      expect(typeof jwtSet.refresh_token).toBe(typeof '');
     });
 
     it('should throw UnauthorizedExeption', async () => {
@@ -124,6 +125,29 @@ describe('AuthService', () => {
       }
       expect(error).not.toBeNull();
       error = null;
+    });
+  });
+
+  describe('refresh', () => {
+    it('should be defined', () => {
+      expect(authService.refresh).toBeDefined();
+    });
+
+    it('should be return JWT tokens', async () => {
+      const singinBody: AuthSigninBodyDTO = {
+        api_key: 'YM4Y74Q-JXFEW2I-SETD5UI-AJFVGVY',
+        api_secret: 'IF7MM6Q-PP5EQWA-VT324VY-OP3VU3Y',
+      };
+      const signinJwtSet = await authService.signin(singinBody);
+
+      const refreshBody: AuthRefreshBodyDTO = {
+        refresh_token: signinJwtSet.refresh_token,
+      };
+      const refreshJwtSet = await authService.refresh(refreshBody);
+      expect(refreshJwtSet.access_token).toBeDefined();
+      expect(typeof refreshJwtSet.access_token).toBe(typeof '');
+      expect(refreshJwtSet.refresh_token).toBeDefined();
+      expect(typeof refreshJwtSet.refresh_token).toBe(typeof '');
     });
   });
 });
