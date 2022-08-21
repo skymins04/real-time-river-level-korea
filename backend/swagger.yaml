@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  version: 1.0.0
+  version: 1.0.1
   title: real-time-river-level-korea-api
   description: '실시한 하천 수위 현황 API 명세 문서'
 tags:
@@ -8,6 +8,8 @@ tags:
     description: API 접근 인증 관련 기능
   - name: riverlevel
     description: 하천수위정보 관련 기능
+  - name: crawling
+    description: 데이터수집 관련 기능
 components:
   securitySchemes:
     bearerAuth:
@@ -200,7 +202,8 @@ paths:
                     |  사용허가영역 |                  설명                      |
                     | ---------- | ----------------------------------------- |
                     | riverlevel | 하천수위정보 API를 이용할 수 있도록 허용된 분류입니다. |
-                  enum: [riverlevel]
+                    |   crawler  | 하천수위정보를 등록할 수 있도록 허용된 분류입니다.     |
+                  enum: [riverlevel, crawler]
                   example: riverlevel
                 owner:
                   type: string
@@ -351,7 +354,7 @@ paths:
         '400':
           description: 잘못된 요청
         '401':
-          description: 잘못된 인증 정보
+          description: 잘못되거나 만료된 인증 정보
         '5XX':
           description: 내부 오류
 
@@ -467,7 +470,195 @@ paths:
         '400':
           description: 잘못된 요청
         '401':
-          description: 잘못된 인증 정보
+          description: 잘못되거나 만료된 인증 정보
+        '5XX':
+          description: 내부 오류
+
+  /riverlevel:
+    post:
+      tags:
+        - crawling
+      summary: 하천 수위 데이터를 추가
+      description: |
+        등록된 수위 관측계에 대한 하천 수위 데이터를 추가할 수 있습니다.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - data
+              properties:
+                data:
+                  type: array
+                  description: 수위 관측계 관측데이터 모음
+                  items:
+                    type: object
+                    description: 수위 관측계의 수위관측데이터
+                    required:
+                      - obscd
+                      - water_level
+                      - obsdate
+                    properties:
+                      obscd:
+                        type: string
+                        description: 수위 관측계 코드
+                      water_level:
+                        type: number
+                        description: 현재하천수위(m)
+                        format: double
+                      obsdate:
+                        type: string
+                        description: 관측일시
+                        format: date-time
+      responses:
+        '200':
+          description: 요청 성공
+        '400':
+          description: 잘못된 요청
+        '401':
+          description: 잘못되거나 만료된 인증 정보
+        '5XX':
+          description: 내부 오류
+
+  /rivergauge:
+    post:
+      tags:
+        - crawling
+      summary: 수위 관측계를 신규 등록
+      description: |
+        새로운 하천 수위 관측계를 신규 등록할 수 있습니다. 단, 기존에 등록된 관측계 코드로 관측계의 재등록이 불가합니다.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - data
+              properties:
+                data:
+                  type: array
+                  description: 수위 관측계 정보 모음
+                  items:
+                    type: object
+                    description: 수위 관측계 정보
+                    required:
+                      - obscd
+                      - obsnm
+                      - mngorg
+                      - flood_warning
+                    properties:
+                      obscd:
+                        type: string
+                        description: 수위 관측계 코드
+                      obsnm:
+                        type: string
+                        description: 수위 관측계 이름
+                      mngorg:
+                        type: string
+                        description: 수위 관측계 관할 기관명
+                      flood_warning:
+                        type: string
+                        enum: [Y, N]
+                        description: 홍수특보발령여부
+                      addr:
+                        type: string
+                        description: 수위 관측계 주소
+                      lon:
+                        type: string
+                        description: 수위 관측계 경도 좌표 ("-"로 구분하여 {도}-{분}-{초}로 기입)
+                      lat:
+                        type: string
+                        description: 수위 관측계 위도 좌효 ("-"로 구분하여 {도}-{분}-{초}로 기입)
+                      gdt:
+                        type: number
+                        description: 영점표고
+                        format: double
+                      planflood_level:
+                        type: number
+                        description: 계획홍수위(m)
+                        format: double
+      responses:
+        '200':
+          description: 요청 성공
+        '400':
+          description: 잘못된 요청
+        '401':
+          description: 잘못되거나 만료된 인증 정보
+        '5XX':
+          description: 내부 오류
+    patch:
+      tags:
+        - crawling
+      summary: 수위 관측계의 등록 정보를 수정
+      description: |
+        등록된 수위 관측계의 등록정보를 수정할 수 있습니다.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - data
+              properties:
+                data:
+                  type: array
+                  description: 수위 관측계 정보 모음
+                  items:
+                    type: object
+                    description: 수위 관측계 정보
+                    required:
+                      - obscd
+                      - obsnm
+                      - mngorg
+                      - flood_warning
+                    properties:
+                      obscd:
+                        type: string
+                        description: 수위 관측계 코드
+                      obsnm:
+                        type: string
+                        description: 수위 관측계 이름
+                      mngorg:
+                        type: string
+                        description: 수위 관측계 관할 기관명
+                      flood_warning:
+                        type: string
+                        enum: [Y, N]
+                        description: 홍수특보발령여부
+                      addr:
+                        type: string
+                        description: 수위 관측계 주소
+                      lon:
+                        type: string
+                        description: 수위 관측계 경도 좌표 ("-"로 구분하여 {도}-{분}-{초}로 기입)
+                      lat:
+                        type: string
+                        description: 수위 관측계 위도 좌효 ("-"로 구분하여 {도}-{분}-{초}로 기입)
+                      gdt:
+                        type: number
+                        description: 영점표고
+                        format: double
+                      planflood_level:
+                        type: number
+                        description: 계획홍수위(m)
+                        format: double
+      responses:
+        '200':
+          description: 요청 성공
+        '400':
+          description: 잘못된 요청
+        '401':
+          description: 잘못되거나 만료된 인증 정보
         '5XX':
           description: 내부 오류
 

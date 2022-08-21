@@ -31,7 +31,7 @@ export class AuthService {
         api_key: generateApiKey({ method: 'base32' }).toString(),
         api_secret: generateApiKey({ method: 'base32' }).toString(),
       };
-      await this.prismaService.riverlevel_api_key.create({
+      await this.prismaService.riverlevel_api_key_tb.create({
         data: {
           ...apiKeySet,
           role: body.role,
@@ -45,9 +45,11 @@ export class AuthService {
   }
 
   async signin(body: AuthSigninBodyDTO) {
-    const apiKeyRow = await this.prismaService.riverlevel_api_key.findUnique({
-      where: { api_key: body.api_key },
-    });
+    const apiKeyRow = await this.prismaService.riverlevel_api_key_tb.findUnique(
+      {
+        where: { api_key: body.api_key },
+      },
+    );
     if (
       apiKeyRow &&
       apiKeyRow.api_secret === body.api_secret &&

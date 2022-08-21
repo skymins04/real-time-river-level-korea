@@ -12,6 +12,8 @@ import { AuthRefreshBodyDTO } from './dto/auth-refresh-body.dto';
 describe('AuthService', () => {
   let authService: AuthService;
   let prismaService: PrismaService;
+  const apiTestKey = 'KC3ZUZQ-MOMUC4I-WR3SOTI-HLLI2FQ';
+  const apiTestSecret = 'ISB2EBA-BKKEP6Q-RO6FMEQ-KJZTWIY';
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -25,7 +27,7 @@ describe('AuthService', () => {
   });
 
   afterAll(async () => {
-    await prismaService.riverlevel_api_key.deleteMany({
+    await prismaService.riverlevel_api_key_tb.deleteMany({
       where: { description: 'jest tested' },
     });
   });
@@ -49,11 +51,11 @@ describe('AuthService', () => {
       };
 
       const beforeAPIKeysLength = (
-        await prismaService.riverlevel_api_key.findMany()
+        await prismaService.riverlevel_api_key_tb.findMany()
       ).length;
       const newAPIKeySet = await authService.register(body);
       const afterAPIKeysLength = (
-        await prismaService.riverlevel_api_key.findMany()
+        await prismaService.riverlevel_api_key_tb.findMany()
       ).length;
 
       expect(afterAPIKeysLength).toBe(beforeAPIKeysLength + 1);
@@ -88,8 +90,8 @@ describe('AuthService', () => {
 
     it('should be return JWT tokens', async () => {
       const body: AuthSigninBodyDTO = {
-        api_key: 'YM4Y74Q-JXFEW2I-SETD5UI-AJFVGVY',
-        api_secret: 'IF7MM6Q-PP5EQWA-VT324VY-OP3VU3Y',
+        api_key: apiTestKey,
+        api_secret: apiTestSecret,
       };
       const jwtSet = await authService.signin(body);
       expect(jwtSet.access_token).toBeDefined();
@@ -103,7 +105,7 @@ describe('AuthService', () => {
       try {
         const body: AuthSigninBodyDTO = {
           api_key: '',
-          api_secret: 'IF7MM6Q-PP5EQWA-VT324VY-OP3VU3Y',
+          api_secret: apiTestSecret,
         };
         await authService.signin(body);
       } catch (e) {
@@ -115,7 +117,7 @@ describe('AuthService', () => {
 
       try {
         const body: AuthSigninBodyDTO = {
-          api_key: 'YM4Y74Q-JXFEW2I-SETD5UI-AJFVGVY',
+          api_key: apiTestKey,
           api_secret: '',
         };
         await authService.signin(body);
@@ -135,8 +137,8 @@ describe('AuthService', () => {
 
     it('should be return JWT tokens', async () => {
       const singinBody: AuthSigninBodyDTO = {
-        api_key: 'YM4Y74Q-JXFEW2I-SETD5UI-AJFVGVY',
-        api_secret: 'IF7MM6Q-PP5EQWA-VT324VY-OP3VU3Y',
+        api_key: apiTestKey,
+        api_secret: apiTestSecret,
       };
       const signinJwtSet = await authService.signin(singinBody);
 

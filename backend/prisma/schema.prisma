@@ -5,12 +5,16 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator erd {
+  provider = "prisma-erd-generator"
+}
+
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
-model riverlevel_api_key {
+model riverlevel_api_key_tb {
   no Int @default(autoincrement()) @unique
   api_key String @id
   api_secret String
@@ -19,4 +23,31 @@ model riverlevel_api_key {
   description String?
   enable Boolean @default(true)
   issue_data DateTime @default(now())
+}
+
+model riverlevel_gauge_tb {
+  no Int @default(autoincrement()) @unique
+  obscd String @id
+  obsnm String
+  mngorg String
+  flood_warning Flood_warning @default(N) 
+  addr String?
+  lon String?
+  lat String?
+  gdt Float?
+  planflood_level Float?
+  water_level riverlevel_water_level_tb[]
+}
+
+model riverlevel_water_level_tb {
+  no Int @default(autoincrement()) @unique
+  riverlevel_gauge riverlevel_gauge_tb @relation(fields: [obscd], references: [obscd])
+  obscd String
+  water_level Float
+  obsdate DateTime
+}
+
+enum Flood_warning {
+  N
+  Y
 }
