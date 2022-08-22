@@ -1,15 +1,17 @@
 openapi: 3.0.0
 info:
-  version: 1.0.1
+  version: 1.0.2
   title: real-time-river-level-korea-api
   description: '실시한 하천 수위 현황 API 명세 문서'
 tags:
   - name: auth
     description: API 접근 인증 관련 기능
   - name: riverlevel
-    description: 하천수위정보 관련 기능
+    description: |
+      하천수위정보 관련 기능 (token role: "riverlevel")
   - name: crawling
-    description: 데이터수집 관련 기능
+    description: |
+      데이터수집 관련 기능 (token role: "crawler")
 components:
   securitySchemes:
     bearerAuth:
@@ -142,42 +144,64 @@ components:
                 description: |
                   "시군구" 내의 하천수위 관측계 모음
                 additionalProperties:
-                  type: array
-                  description: 하천수위 관측계의 하천수위관측 데이터 배열
-                  items:
-                    type: object
-                    description: 하천수위 관측계의 하천수위관측 데이터
-                    required:
-                      - timestamp
-                      - river_name
-                      - rivergauge_name
-                      - rivergauge_code
-                      - current_level
-                      - planflood_level
-                      - river_level_ratio
-                    properties:
-                      timestamp:
-                        type: string
-                        description: 관측일시
-                        format: date-time
-                      river_name:
-                        type: string
-                        description: 하천명
-                      rivergauge_name:
-                        type: string
-                        description: 관측계명
-                      current_level:
-                        type: number
-                        description: 현재하천수위(m)
-                        format: double
-                      planflood_level:
-                        type: number
-                        description: 계획홍수위(m)
-                        format: double
-                      river_level_ratio:
-                        type: number
-                        description: 하천수위비율(현채하천수위 ÷ 계획홍수위)
-                        format: double
+                  type: object
+                  description: |
+                    "시군구" 내의 하천수위 관측계 객체
+                  required:
+                    - obscd
+                    - obsnm
+                    - addr
+                    - lon
+                    - lat
+                    - data
+                  properties:
+                    obscd:
+                      type: string
+                      description: 관측계 코드
+                    obsnm:
+                      type: string
+                      description: 관측계 이름
+                    addr:
+                      type: string
+                      description: 관측계 주소
+                    lon:
+                      type: string
+                      description: |
+                        관측계 경도 좌표 (형식: {도}-{분}-{초})
+                    lat:
+                      type: string
+                      description: |
+                        관측계 위도 좌효 (형식: {도}-{분}-{초})
+                    planflood_level:
+                      type: number
+                      format: double
+                      description: 계획홍수위(m)
+                    gdt:
+                      type: number
+                      format: double
+                      description: 영점표고 (m)
+                    data:
+                      type: array
+                      description: 하천수위 관측계의 하천수위관측 데이터 배열
+                      items:
+                        type: object
+                        description: 하천수위 관측계의 하천수위관측 데이터
+                        required:
+                          - timestamp
+                          - current_level
+                        properties:
+                          timestamp:
+                            type: string
+                            description: 관측일시
+                            format: date-time
+                          current_level:
+                            type: number
+                            description: 현재하천수위(m)
+                            format: double
+                          river_level_ratio:
+                            type: number
+                            description: 하천수위비율(현채하천수위 ÷ 계획홍수위, 0 ~ 1 사이 범위의 실수)
+                            format: double
 
 paths:
   /auth/register:
@@ -295,7 +319,8 @@ paths:
         - riverlevel
       summary: 요청한 "시도" 내 모든 "시군구"의 관측계 별 하천수위 정보
       description: |
-        파라미터 **"sido"**를 통해 모든 "시군구"의 관측계 별 하천수위 정보를 가져올 "시도"를 지정할 수 있습니다.
+        파라미터 **"sido"**를 통해 모든 "시군구"의 관측계 별 하천수위 정보를 가져올 "시도"를 지정할 수 있습니다.  
+        **각 관측계의 "planflood_level", "gdt", "river_level_ratio"는 null 값일 수 있습니다.**
       security:
         - bearerAuth: []
       parameters:
@@ -327,30 +352,46 @@ paths:
                     riverguage_length: 2
                     riverguage:
                       성동교:
-                        - timestamp: '2022-08-17T13:30:15Z'
-                          river_name: 중량천
-                          rivergauge_name: 성동교
-                          current_level: 4.96
-                          planflood_level: 17.05
-                          river_level_ratio: 0.29032258
+                        obscd: seoul_901
+                        obsnm: 성동교
+                        addr: 서울특별시 성동구 행당동 성동교
+                        lon: 127-2-37
+                        lat: 37-33-9
+                        planflood_level: 17.05
+                        gdt: null
+                        data:
+                          - timestamp: '2022-08-17T13:30:15Z'
+                            current_level: 4.96
+                            river_level_ratio: 0.29032258
                       마장2교:
-                        - timestamp: '2022-08-17T13:30:15Z'
-                          river_name: 청계천
-                          rivergauge_name: 마장2교
-                          current_level: 8.3
-                          planflood_level: 17.05
-                          river_level_ratio: 0.48680351
+                        obscd: seoul_902
+                        obsnm: 마장2교
+                        addr: 서울시 성동구 마장동 마장2교
+                        lon: 127-2-48
+                        lat: 37-34-7
+                        planflood_level: 17.05
+                        gdt: null
+                        data:
+                          - timestamp: '2022-08-17T13:30:15Z'
+                            current_level: 8.3
+                            river_level_ratio: 0.48680351
                   마포구:
                     sigungu_name: 마포구
                     average_river_level_ratio: 0.76339869
                     riverguage_length: 1
                     riverguage:
-                      - timestamp: '2022-08-17T13:30:15Z'
-                        river_name: 홍제천
-                        rivergauge_name: 성산2교
-                        current_level: 11.68
+                      성산2교:
+                        obscd: seoul_1501
+                        obsnm: 성산2교
+                        addr: 서울특별시 마포구 성산동 성산2교
+                        lon: 37-33-56
+                        lat: 126-54-41
                         planflood_level: 15.3
-                        river_level_ratio: 0.76339869
+                        gdt: null
+                        data:
+                          - timestamp: '2022-08-17T13:30:15Z'
+                            current_level: 11.68
+                            river_level_ratio: 0.76339869
         '400':
           description: 잘못된 요청
         '401':
@@ -364,7 +405,8 @@ paths:
         - riverlevel
       summary: 요청한 "시도" 내 특정 "시군구"의 관측계 별 하천수위 정보
       description: |
-        파라미터 **"sido"**와 **"sigungu"**를 통해 관측계 별 하천수위 정보를 가져올 "시도"와 "시군구"를 지정할 수 있습니다.
+        파라미터 **"sido"**와 **"sigungu"**를 통해 관측계 별 하천수위 정보를 가져올 "시도"와 "시군구"를 지정할 수 있습니다.  
+        **각 관측계의 "planflood_level", "gdt", "river_level_ratio"는 null 값일 수 있습니다.**
       security:
         - bearerAuth: []
       parameters:
@@ -403,70 +445,56 @@ paths:
                   성동구:
                     sigungu_name: 성동구
                     average_river_level_ratio: 0.38856304
-                    rivergauge_length: 2
-                    rivergauge:
+                    riverguage_length: 2
+                    riverguage:
                       성동교:
-                        - timestamp: '2022-08-17T13:10:15Z'
-                          river_name: 중량천
-                          rivergauge_name: 성동교
-                          current_level: 4.96
-                          planflood_level: 17.05
-                          river_level_ratio: 0.29032258
-                        - timestamp: '2022-08-17T13:15:15Z'
-                          river_name: 중량천
-                          rivergauge_name: 성동교
-                          current_level: 4.96
-                          planflood_level: 17.05
-                          river_level_ratio: 0.29032258
-                        - timestamp: '2022-08-17T13:20:15Z'
-                          river_name: 중량천
-                          rivergauge_name: 성동교
-                          current_level: 4.96
-                          planflood_level: 17.05
-                          river_level_ratio: 0.29032258
-                        - timestamp: '2022-08-17T13:25:15Z'
-                          river_name: 중량천
-                          rivergauge_name: 성동교
-                          current_level: 4.96
-                          planflood_level: 17.05
-                          river_level_ratio: 0.29032258
-                        - timestamp: '2022-08-17T13:30:15Z'
-                          river_name: 중량천
-                          rivergauge_name: 성동교
-                          current_level: 4.96
-                          planflood_level: 17.05
-                          river_level_ratio: 0.29032258
+                        obscd: seoul_901
+                        obsnm: 성동교
+                        addr: 서울특별시 성동구 행당동 성동교
+                        lon: 127-2-37
+                        lat: 37-33-9
+                        planflood_level: 17.05
+                        gdt: null
+                        data:
+                          - timestamp: '2022-08-17T13:10:15Z'
+                            current_level: 4.96
+                            river_level_ratio: 0.29032258
+                          - timestamp: '2022-08-17T13:15:15Z'
+                            current_level: 4.96
+                            river_level_ratio: 0.29032258
+                          - timestamp: '2022-08-17T13:20:15Z'
+                            current_level: 4.96
+                            river_level_ratio: 0.29032258
+                          - timestamp: '2022-08-17T13:25:15Z'
+                            current_level: 4.96
+                            river_level_ratio: 0.29032258
+                          - timestamp: '2022-08-17T13:30:15Z'
+                            current_level: 4.96
+                            river_level_ratio: 0.29032258
                       마장2교:
-                        - timestamp: '2022-08-17T13:10:15Z'
-                          river_name: 청계천
-                          rivergauge_name: 마장2교
-                          current_level: 8.3
-                          planflood_level: 17.05
-                          river_level_ratio: 0.48680351
-                        - timestamp: '2022-08-17T13:15:15Z'
-                          river_name: 청계천
-                          rivergauge_name: 마장2교
-                          current_level: 8.3
-                          planflood_level: 17.05
-                          river_level_ratio: 0.48680351
-                        - timestamp: '2022-08-17T13:20:15Z'
-                          river_name: 청계천
-                          rivergauge_name: 마장2교
-                          current_level: 8.3
-                          planflood_level: 17.05
-                          river_level_ratio: 0.48680351
-                        - timestamp: '2022-08-17T13:25:15Z'
-                          river_name: 청계천
-                          rivergauge_name: 마장2교
-                          current_level: 8.3
-                          planflood_level: 17.05
-                          river_level_ratio: 0.48680351
-                        - timestamp: '2022-08-17T13:30:15Z'
-                          river_name: 청계천
-                          rivergauge_name: 마장2교
-                          current_level: 8.3
-                          planflood_level: 17.05
-                          river_level_ratio: 0.48680351
+                        obscd: seoul_902
+                        obsnm: 마장2교
+                        addr: 서울시 성동구 마장동 마장2교
+                        lon: 127-2-48
+                        lat: 37-34-7
+                        planflood_level: 17.05
+                        gdt: null
+                        data:
+                          - timestamp: '2022-08-17T13:10:15Z'
+                            current_level: 8.3
+                            river_level_ratio: 0.48680351
+                          - timestamp: '2022-08-17T13:15:15Z'
+                            current_level: 8.3
+                            river_level_ratio: 0.48680351
+                          - timestamp: '2022-08-17T13:20:15Z'
+                            current_level: 8.3
+                            river_level_ratio: 0.48680351
+                          - timestamp: '2022-08-17T13:25:15Z'
+                            current_level: 8.3
+                            river_level_ratio: 0.48680351
+                          - timestamp: '2022-08-17T13:30:15Z'
+                            current_level: 8.3
+                            river_level_ratio: 0.48680351
         '400':
           description: 잘못된 요청
         '401':

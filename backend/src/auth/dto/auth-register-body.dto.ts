@@ -2,7 +2,7 @@ import { IsIn, IsOptional, IsString, Matches } from 'class-validator';
 
 export class AuthRegisterBodyDTO {
   @IsString()
-  @IsIn(['riverlevel'])
+  @IsIn(['riverlevel', 'crawler'])
   readonly role: string;
 
   @IsString()
