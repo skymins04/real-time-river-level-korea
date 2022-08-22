@@ -1,13 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { AuthService } from './auth.service';
-import { AuthController } from './auth.controller';
-import { PrismaService } from '../prisma.service';
-import { JwtAccessStrategy } from './strategies/auth.jwt.access.strategy';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
+import { PrismaService } from 'src/prisma.service';
 import { AuthRegisterBodyDTO } from './dto/auth-register-body.dto';
 import { AuthSigninBodyDTO } from './dto/auth-signin-body.dto';
 import { AuthRefreshBodyDTO } from './dto/auth-refresh-body.dto';
+import { AuthService } from './auth.service';
+import { AuthController } from './auth.controller';
+import { JwtAccessStrategy } from './strategies/auth.jwt.access.strategy';
 
 describe('AuthService', () => {
   let authService: AuthService;
