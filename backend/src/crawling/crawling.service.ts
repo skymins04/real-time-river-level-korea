@@ -76,13 +76,11 @@ export class CrawlingService {
     const requestedObsKeys: string[] = [];
     const obsArray: Prisma.riverlevel_gauge_tbUpdateInput[] = body.data
       .filter((obs) => {
-        if (!(obs.obscd in requestedObsKeys)) {
+        if (!requestedObsKeys.includes(obs.obscd)) {
           requestedObsKeys.push(obs.obscd);
-          for (const key in obs) {
-            if (obs[key] !== this.getOneRegistedGauges(obs.obscd)[key]) {
+          for (const key in obs)
+            if (obs[key] !== this.getOneRegistedGauges(obs.obscd)[key])
               return true;
-            }
-          }
         }
         return false;
       })
@@ -109,7 +107,6 @@ export class CrawlingService {
       });
 
     for (const obs of obsArray) {
-      console.log(obs);
       await this.prismaService.riverlevel_gauge_tb.update({
         where: {
           obscd: obs.obscd.toString(),
