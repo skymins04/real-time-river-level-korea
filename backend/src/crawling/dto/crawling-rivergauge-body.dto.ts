@@ -24,7 +24,7 @@ class CreateCrawlingRivergaugeData {
 
   @IsString()
   @IsIn(['Y', 'N'])
-  readonly flood_warning: string;
+  readonly flood_warning: 'Y' | 'N';
 
   @IsNullable()
   @IsString()
@@ -66,7 +66,7 @@ class UpdateCrawlingRivergaugeData {
   @IsString()
   @IsIn(['Y', 'N'])
   @IsOptional()
-  readonly flood_warning?: string;
+  readonly flood_warning?: 'Y' | 'N';
 
   @IsNullable()
   @IsString()
