@@ -14,22 +14,27 @@ export class CrawlingService {
   private registedGaugeCodes: string[];
   private registedGauges: riverlevel_gauge_tb[];
 
-  private async getRegistedGauges() {
+  async getRegistedGauges() {
     const gauges = await this.prismaService.riverlevel_gauge_tb.findMany();
     const gaugeCodes = gauges.map((obs) => obs.obscd);
     return { gauges, gaugeCodes };
   }
 
-  private getOneRegistedGauges(obscd) {
+  getOneRegistedGauges(obscd) {
     return this.registedGauges.filter((obs) => obs.obscd === obscd)[0];
   }
 
-  private async initGauges() {
+  async initGauges() {
     if (!this.registedGauges || this.registedGauges.length === 0) {
       const { gauges, gaugeCodes } = await this.getRegistedGauges();
       this.registedGauges = gauges;
       this.registedGaugeCodes = gaugeCodes;
     }
+  }
+
+  clearGauges() {
+    this.registedGauges = [];
+    this.registedGaugeCodes = [];
   }
 
   async setRiverlevel(body: CreateCrawlingRiverlevelBodyDTO) {
@@ -39,10 +44,17 @@ export class CrawlingService {
   async setRivergauge(body: CreateCrawlingRivergaugeBodyDTO) {
     await this.initGauges();
 
+    const requestedObsKeys: string[] = [];
     const obsArray: riverlevel_gauge_tb[] = body.data
-      .filter((obs) => !this.registedGaugeCodes.includes(obs.obscd))
+      .filter((obs) => {
+        if (!requestedObsKeys.includes(obs.obscd)) {
+          requestedObsKeys.push(obs.obscd);
+          if (!this.registedGaugeCodes.includes(obs.obscd)) return true;
+        }
+        return false;
+      })
       .map((obs) => ({
-        no: null,
+        no: undefined,
         obscd: obs.obscd,
         obsnm: obs.obsnm,
         mngorg: obs.mngorg,
