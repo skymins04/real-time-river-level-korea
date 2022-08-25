@@ -5,7 +5,11 @@ import {
   UpdateCrawlingRivergaugeBodyDTO,
 } from './dto/crawling-rivergauge-body.dto';
 import { CreateCrawlingRiverlevelBodyDTO } from './dto/crawling-riverlevel-body.dto';
-import { Prisma, riverlevel_gauge_tb } from '@prisma/client';
+import {
+  Prisma,
+  riverlevel_gauge_tb,
+  riverlevel_water_level_tb,
+} from '@prisma/client';
 
 @Injectable()
 export class CrawlingService {
@@ -38,6 +42,10 @@ export class CrawlingService {
   }
 
   async setRiverlevel(body: CreateCrawlingRiverlevelBodyDTO) {
+    await this.initGauges();
+
+    const requestedObsKeys: string[] = [];
+
     return true;
   }
 

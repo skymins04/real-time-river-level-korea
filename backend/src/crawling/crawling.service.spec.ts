@@ -105,11 +105,9 @@ describe('CrawlingService', () => {
       await initTestData();
       const { gauges, gaugeCodes } = await crawlingService.getRegistedGauges();
       expect(gauges).toBeDefined();
-      expect(gauges.length).toBe(4);
-      expect(gauges[0].obscd).toBe('test_1_cd');
+      expect(gauges.map((x) => x.obscd).includes('test_1_cd')).toBe(true);
       expect(gaugeCodes).toBeDefined();
-      expect(gaugeCodes.length).toBe(4);
-      expect(gaugeCodes[0]).toBe('test_1_cd');
+      expect(gaugeCodes.includes('test_1_cd')).toBe(true);
     });
   });
 
