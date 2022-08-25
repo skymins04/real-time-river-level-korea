@@ -246,7 +246,7 @@ paths:
                   example: honggildong's API key set
 
       responses:
-        '200':
+        '201':
           description: 요청 성공
           content:
             application/json:
@@ -302,14 +302,14 @@ paths:
                   type: string
                   example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
       responses:
-        '200':
+        '201':
           description: 인증 성공
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/JWT_token_set_schema'
-        '400':
-          description: 잘못된 요청
+        '401':
+          description: 인증 실패
         '5XX':
           description: 내부 오류
 

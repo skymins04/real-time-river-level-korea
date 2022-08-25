@@ -12,8 +12,8 @@ import { JwtAccessStrategy } from './strategies/auth.jwt.access.strategy';
 describe('AuthService', () => {
   let authService: AuthService;
   let prismaService: PrismaService;
-  const apiTestKey = 'KC3ZUZQ-MOMUC4I-WR3SOTI-HLLI2FQ';
-  const apiTestSecret = 'ISB2EBA-BKKEP6Q-RO6FMEQ-KJZTWIY';
+  const apiTestKey = process.env['TEST_RIVERLEVEL_API_KEY'];
+  const apiTestSecret = process.env['TEST_RIVERLEVEL_API_SECRET'];
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
