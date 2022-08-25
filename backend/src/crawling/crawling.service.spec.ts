@@ -73,7 +73,9 @@ describe('CrawlingService', () => {
   });
 
   afterEach(async () => {
-    await prismaService.riverlevel_gauge_tb.deleteMany({});
+    await prismaService.riverlevel_gauge_tb.deleteMany({
+      where: { obscd: { startsWith: 'test' } },
+    });
     crawlingService.clearGauges();
   });
 
