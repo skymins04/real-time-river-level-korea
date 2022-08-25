@@ -15,7 +15,7 @@ describe('AppController (e2e)', () => {
   const crawlingApiTestSecret = process.env['TEST_CRAWLING_API_SECRET'];
   const authAdminSecretkey = process.env['AUTH_ADMIN_SECRET_KEY'];
 
-  beforeAll(async () => {
+  beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
       providers: [PrismaService],
@@ -33,6 +33,9 @@ describe('AppController (e2e)', () => {
     prismaService = moduleFixture.get<PrismaService>(PrismaService);
     await app.init();
     appServer = app.getHttpServer();
+    await prismaService.riverlevel_gauge_tb.deleteMany({
+      where: { obscd: { startsWith: 'e2etest' } },
+    });
   });
 
   describe('/auth', () => {
@@ -136,8 +139,319 @@ describe('AppController (e2e)', () => {
   });
 
   describe('/crawling', () => {
-    it.todo('/auth/riverlevel (POST)');
-    it.todo('/auth/rivergauge (POST)');
-    it.todo('/auth/rivergauge (PATCH)');
+    it.todo('/crawling/riverlevel (POST)');
+    describe('/crawling/rivergauge (POST)', () => {
+      it('should be return 400 error', async () => {
+        const accessToken = (
+          await request(appServer).post('/auth/signin').send({
+            api_key: crawlingApiTestKey,
+            api_secret: crawlingApiTestSecret,
+          })
+        ).body.access_token;
+        await request(appServer)
+          .post('/crawling/rivergauge')
+          .set('Authorization', `bearer ${accessToken}`)
+          .expect(400);
+        await request(appServer)
+          .post('/crawling/rivergauge')
+          .set('Authorization', `bearer ${accessToken}`)
+          .send({
+            data: [
+              {
+                obscd: 'e2etest_1',
+                obsnm: 'test1',
+              },
+            ],
+          })
+          .expect(400);
+      });
+      it('should be return 401 error', async () => {
+        await request(appServer).post('/crawling/rivergauge').expect(401);
+        await request(appServer)
+          .post('/crawling/rivergauge')
+          .set('Authorization', `bearer aweofihoaiwehfiowhefihawoefh`)
+          .expect(401);
+      });
+      it('should be return 403 error', async () => {
+        const accessToken = (
+          await request(appServer).post('/auth/signin').send({
+            api_key: riverlevelApiTestKey,
+            api_secret: riverlevelApiTestSecret,
+          })
+        ).body.access_token;
+        await request(appServer)
+          .post('/crawling/rivergauge')
+          .set('Authorization', `bearer ${accessToken}`)
+          .expect(403);
+      });
+      it('should be return 201', async () => {
+        try {
+          const accessToken = (
+            await request(appServer).post('/auth/signin').send({
+              api_key: crawlingApiTestKey,
+              api_secret: crawlingApiTestSecret,
+            })
+          ).body.access_token;
+          const res1 = await request(appServer)
+            .post('/crawling/rivergauge')
+            .set('Authorization', `bearer ${accessToken}`)
+            .send({
+              data: [
+                {
+                  obscd: 'e2etest_1',
+                  obsnm: 'test1',
+                  mngorg: 'test',
+                  addr: 'test addr',
+                  flood_warning: 'N',
+                  lon: '12-123-123',
+                  lat: '12-123-123',
+                  planflood_level: null,
+                  gdt: null,
+                },
+                {
+                  obscd: 'e2etest_2',
+                  obsnm: 'test1',
+                  mngorg: 'test',
+                  addr: 'test addr',
+                  flood_warning: 'N',
+                  lon: '12-123-123',
+                  lat: '12-123-123',
+                  planflood_level: null,
+                  gdt: null,
+                },
+                {
+                  obscd: 'e2etest_3',
+                  obsnm: 'test1',
+                  mngorg: 'test',
+                  addr: 'test addr',
+                  flood_warning: 'N',
+                  lon: '12-123-123',
+                  lat: '12-123-123',
+                  planflood_level: null,
+                  gdt: null,
+                },
+                {
+                  obscd: 'e2etest_3',
+                  obsnm: 'test1',
+                  mngorg: 'test',
+                  addr: 'test addr',
+                  flood_warning: 'N',
+                  lon: '12-123-123',
+                  lat: '12-123-123',
+                  planflood_level: null,
+                  gdt: null,
+                },
+                {
+                  obscd: 'e2etest_3',
+                  obsnm: 'test1',
+                  mngorg: 'test',
+                  addr: 'test addr',
+                  flood_warning: 'N',
+                  lon: '12-123-123',
+                  lat: '12-123-123',
+                  planflood_level: null,
+                  gdt: null,
+                },
+                {
+                  obscd: 'e2etest_3',
+                  obsnm: 'test1',
+                  mngorg: 'test',
+                  addr: 'test addr',
+                  flood_warning: 'N',
+                  lon: '12-123-123',
+                  lat: '12-123-123',
+                  planflood_level: null,
+                  gdt: null,
+                },
+              ],
+            })
+            .expect(201);
+
+          expect(res1.body.requested).toBe(6);
+          expect(res1.body.processed).toBe(3);
+
+          const res2 = await request(appServer)
+            .post('/crawling/rivergauge')
+            .set('Authorization', `bearer ${accessToken}`)
+            .send({
+              data: [
+                {
+                  obscd: 'e2etest_1',
+                  obsnm: 'test1',
+                  mngorg: 'test',
+                  addr: 'test addr',
+                  flood_warning: 'N',
+                  lon: '12-123-123',
+                  lat: '12-123-123',
+                  planflood_level: null,
+                  gdt: null,
+                },
+                {
+                  obscd: 'e2etest_2',
+                  obsnm: 'test1',
+                  mngorg: 'test',
+                  addr: 'test addr',
+                  flood_warning: 'N',
+                  lon: '12-123-123',
+                  lat: '12-123-123',
+                  planflood_level: null,
+                  gdt: null,
+                },
+                {
+                  obscd: 'e2etest_3',
+                  obsnm: 'test1',
+                  mngorg: 'test',
+                  addr: 'test addr',
+                  flood_warning: 'N',
+                  lon: '12-123-123',
+                  lat: '12-123-123',
+                  planflood_level: null,
+                  gdt: null,
+                },
+              ],
+            })
+            .expect(201);
+          expect(res2.body.requested).toBe(3);
+          expect(res2.body.processed).toBe(0);
+        } finally {
+          await prismaService.riverlevel_gauge_tb.deleteMany({
+            where: { obscd: { startsWith: 'e2etest' } },
+          });
+        }
+      });
+    });
+    describe('/crawling/rivergauge (PATCH)', () => {
+      it('should be return 400', async () => {
+        const accessToken = (
+          await request(appServer).post('/auth/signin').send({
+            api_key: crawlingApiTestKey,
+            api_secret: crawlingApiTestSecret,
+          })
+        ).body.access_token;
+        await request(appServer)
+          .patch('/crawling/rivergauge')
+          .set('Authorization', `bearer ${accessToken}`)
+          .expect(400);
+        await request(appServer)
+          .patch('/crawling/rivergauge')
+          .set('Authorization', `bearer ${accessToken}`)
+          .send({
+            data: [],
+          })
+          .expect(400);
+      });
+      it('should be return 401', async () => {
+        await request(appServer).patch('/crawling/rivergauge').expect(401);
+        await request(appServer)
+          .patch('/crawling/rivergauge')
+          .set('Authorization', 'bearer aweofihoaiwehfiowhefihawoefh')
+          .expect(401);
+      });
+      it('should be return 403', async () => {
+        const accessToken = (
+          await request(appServer).post('/auth/signin').send({
+            api_key: riverlevelApiTestKey,
+            api_secret: riverlevelApiTestSecret,
+          })
+        ).body.access_token;
+        await request(appServer)
+          .patch('/crawling/rivergauge')
+          .set('Authorization', `bearer ${accessToken}`)
+          .expect(403);
+      });
+      it('should be return 200', async () => {
+        try {
+          const accessToken = (
+            await request(appServer).post('/auth/signin').send({
+              api_key: crawlingApiTestKey,
+              api_secret: crawlingApiTestSecret,
+            })
+          ).body.access_token;
+          await request(appServer)
+            .post('/crawling/rivergauge')
+            .set('Authorization', `bearer ${accessToken}`)
+            .send({
+              data: [
+                {
+                  obscd: 'e2etest_1',
+                  obsnm: 'test1',
+                  mngorg: 'test',
+                  addr: 'test addr',
+                  flood_warning: 'N',
+                  lon: '12-123-123',
+                  lat: '12-123-123',
+                  planflood_level: null,
+                  gdt: null,
+                },
+                {
+                  obscd: 'e2etest_2',
+                  obsnm: 'test1',
+                  mngorg: 'test',
+                  addr: 'test addr',
+                  flood_warning: 'N',
+                  lon: '12-123-123',
+                  lat: '12-123-123',
+                  planflood_level: null,
+                  gdt: null,
+                },
+                {
+                  obscd: 'e2etest_3',
+                  obsnm: 'test1',
+                  mngorg: 'test',
+                  addr: 'test addr',
+                  flood_warning: 'N',
+                  lon: '12-123-123',
+                  lat: '12-123-123',
+                  planflood_level: null,
+                  gdt: null,
+                },
+              ],
+            })
+            .expect(201);
+          const res = await request(appServer)
+            .patch('/crawling/rivergauge')
+            .set('Authorization', `bearer ${accessToken}`)
+            .send({
+              data: [
+                {
+                  obscd: 'e2etest_1',
+                  addr: 'updated test addr',
+                },
+                {
+                  obscd: 'e2etest_2',
+                  addr: 'updated test addr',
+                },
+                {
+                  obscd: 'e2etest_3',
+                  addr: 'updated test addr',
+                },
+                {
+                  obscd: 'e2etest_3',
+                  addr: 'updated test addr',
+                },
+                {
+                  obscd: 'e2etest_4',
+                  addr: 'updated test addr',
+                },
+              ],
+            })
+            .expect(200);
+          const addrArr = (
+            await prismaService.riverlevel_gauge_tb.findMany({
+              where: { obscd: { startsWith: 'e2etest' } },
+            })
+          ).map((x) => x.addr);
+          expect(res.body.requested).toBe(5);
+          expect(res.body.processed).toBe(3);
+          for (const addr of addrArr) {
+            expect(addr).toBe('updated test addr');
+          }
+        } finally {
+          await prismaService.riverlevel_gauge_tb.deleteMany({
+            where: { obscd: { startsWith: 'e2etest' } },
+          });
+        }
+      });
+    });
   });
 });

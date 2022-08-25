@@ -552,7 +552,7 @@ paths:
                         description: 관측일시
                         format: date-time
       responses:
-        '200':
+        '201':
           description: 요청 성공
         '400':
           description: 잘못된 요청
@@ -637,7 +637,7 @@ paths:
                         description: 계획홍수위(m)
                         format: double
       responses:
-        '200':
+        '201':
           description: 요청 성공
         '400':
           description: 잘못된 요청

@@ -90,9 +90,12 @@ export class CrawlingService {
       .filter((obs) => {
         if (!requestedObsKeys.includes(obs.obscd)) {
           requestedObsKeys.push(obs.obscd);
-          for (const key in obs)
-            if (obs[key] !== this.getOneRegistedGauges(obs.obscd)[key])
-              return true;
+          for (const key in obs) {
+            const tmp = this.getOneRegistedGauges(obs.obscd);
+            if (tmp) {
+              if (obs[key] !== tmp[key]) return true;
+            }
+          }
         }
         return false;
       })
