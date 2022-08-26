@@ -73,9 +73,16 @@ describe('CrawlingService', () => {
   });
 
   afterEach(async () => {
-    await prismaService.riverlevel_gauge_tb.deleteMany({
-      where: { obscd: { startsWith: 'test' } },
-    });
+    try {
+      await prismaService.riverlevel_water_level_tb.deleteMany({
+        where: { obscd: { startsWith: 'test' } },
+      });
+      await prismaService.riverlevel_gauge_tb.deleteMany({
+        where: { obscd: { startsWith: 'test' } },
+      });
+    } catch (e) {
+      console.log(e);
+    }
     crawlingService.clearGauges();
   });
 
@@ -118,7 +125,7 @@ describe('CrawlingService', () => {
 
     it('should be return "test_1_cd" gauge object', async () => {
       await initTestData();
-      await crawlingService.initGauges();
+      await crawlingService.initGauges(true);
       const gauge = crawlingService.getOneRegistedGauges('test_1_cd');
       expect(gauge).toBeDefined();
       expect(typeof gauge).toBe('object');
@@ -127,7 +134,7 @@ describe('CrawlingService', () => {
 
     it('should be return undefined', async () => {
       await initTestData();
-      await crawlingService.initGauges();
+      await crawlingService.initGauges(true);
       const gauge = crawlingService.getOneRegistedGauges('test_5_cd');
       expect(gauge).toBeUndefined();
     });
@@ -142,8 +149,8 @@ describe('CrawlingService', () => {
       const body: CreateCrawlingRivergaugeBodyDTO = {
         data: [
           {
-            obscd: 'test_1_cd',
-            obsnm: 'test_1_name',
+            obscd: 'test_5_cd',
+            obsnm: 'test_5_name',
             mngorg: 'test_org',
             flood_warning: 'N',
             addr: 'test addr',
@@ -153,8 +160,8 @@ describe('CrawlingService', () => {
             planflood_level: null,
           },
           {
-            obscd: 'test_2_cd',
-            obsnm: 'test_2_name',
+            obscd: 'test_6_cd',
+            obsnm: 'test_6_name',
             mngorg: 'test_org',
             flood_warning: 'N',
             addr: 'test addr',
@@ -164,8 +171,8 @@ describe('CrawlingService', () => {
             planflood_level: null,
           },
           {
-            obscd: 'test_3_cd',
-            obsnm: 'test_3_name',
+            obscd: 'test_7_cd',
+            obsnm: 'test_7_name',
             mngorg: 'test_org',
             flood_warning: 'N',
             addr: 'test addr',
@@ -180,17 +187,17 @@ describe('CrawlingService', () => {
       expect(result.status).toBe('Success');
       expect(result.requested).toBe(3);
       expect(result.processed).toBe(3);
-      expect(crawlingService.getOneRegistedGauges('test_1_cd')).toBeDefined();
-      expect(crawlingService.getOneRegistedGauges('test_2_cd')).toBeDefined();
-      expect(crawlingService.getOneRegistedGauges('test_3_cd')).toBeDefined();
+      expect(crawlingService.getOneRegistedGauges('test_5_cd')).toBeDefined();
+      expect(crawlingService.getOneRegistedGauges('test_6_cd')).toBeDefined();
+      expect(crawlingService.getOneRegistedGauges('test_7_cd')).toBeDefined();
     });
 
     it('should be return {status: "Success", requested: 3, processed: 0}', async () => {
       const body: CreateCrawlingRivergaugeBodyDTO = {
         data: [
           {
-            obscd: 'test_1_cd',
-            obsnm: 'test_1_name',
+            obscd: 'test_8_cd',
+            obsnm: 'test_8_name',
             mngorg: 'test_org',
             flood_warning: 'N',
             addr: 'test addr',
@@ -200,8 +207,8 @@ describe('CrawlingService', () => {
             planflood_level: null,
           },
           {
-            obscd: 'test_2_cd',
-            obsnm: 'test_2_name',
+            obscd: 'test_9_cd',
+            obsnm: 'test_9_name',
             mngorg: 'test_org',
             flood_warning: 'N',
             addr: 'test addr',
@@ -211,8 +218,8 @@ describe('CrawlingService', () => {
             planflood_level: null,
           },
           {
-            obscd: 'test_3_cd',
-            obsnm: 'test_3_name',
+            obscd: 'test_10_cd',
+            obsnm: 'test_10_name',
             mngorg: 'test_org',
             flood_warning: 'N',
             addr: 'test addr',
@@ -228,17 +235,17 @@ describe('CrawlingService', () => {
       expect(result.status).toBe('Success');
       expect(result.requested).toBe(3);
       expect(result.processed).toBe(0);
-      expect(crawlingService.getOneRegistedGauges('test_1_cd')).toBeDefined();
-      expect(crawlingService.getOneRegistedGauges('test_2_cd')).toBeDefined();
-      expect(crawlingService.getOneRegistedGauges('test_3_cd')).toBeDefined();
+      expect(crawlingService.getOneRegistedGauges('test_8_cd')).toBeDefined();
+      expect(crawlingService.getOneRegistedGauges('test_9_cd')).toBeDefined();
+      expect(crawlingService.getOneRegistedGauges('test_10_cd')).toBeDefined();
     });
 
     it('should be filter duplicate itmes', async () => {
       const body: CreateCrawlingRivergaugeBodyDTO = {
         data: [
           {
-            obscd: 'test_1_cd',
-            obsnm: 'test_1_name',
+            obscd: 'test_11_cd',
+            obsnm: 'test_11_name',
             mngorg: 'test_org',
             flood_warning: 'N',
             addr: 'test addr',
@@ -248,8 +255,8 @@ describe('CrawlingService', () => {
             planflood_level: null,
           },
           {
-            obscd: 'test_1_cd',
-            obsnm: 'test_2_name',
+            obscd: 'test_11_cd',
+            obsnm: 'test_11_name',
             mngorg: 'test_org',
             flood_warning: 'N',
             addr: 'test addr',
@@ -259,8 +266,8 @@ describe('CrawlingService', () => {
             planflood_level: null,
           },
           {
-            obscd: 'test_1_cd',
-            obsnm: 'test_3_name',
+            obscd: 'test_11_cd',
+            obsnm: 'test_11_name',
             mngorg: 'test_org',
             flood_warning: 'N',
             addr: 'test addr',
@@ -275,9 +282,9 @@ describe('CrawlingService', () => {
       expect(result.status).toBe('Success');
       expect(result.requested).toBe(3);
       expect(result.processed).toBe(1);
-      expect(crawlingService.getOneRegistedGauges('test_1_cd')).toBeDefined();
-      expect(crawlingService.getOneRegistedGauges('test_1_cd').obsnm).toBe(
-        'test_1_name',
+      expect(crawlingService.getOneRegistedGauges('test_11_cd')).toBeDefined();
+      expect(crawlingService.getOneRegistedGauges('test_11_cd').obsnm).toBe(
+        'test_11_name',
       );
     });
   });
@@ -291,8 +298,8 @@ describe('CrawlingService', () => {
       const createBody: CreateCrawlingRivergaugeBodyDTO = {
         data: [
           {
-            obscd: 'test_1_cd',
-            obsnm: 'test_1_name',
+            obscd: 'test_14_cd',
+            obsnm: 'test_14_name',
             mngorg: 'test_org',
             flood_warning: 'N',
             addr: 'test addr',
@@ -302,8 +309,8 @@ describe('CrawlingService', () => {
             planflood_level: null,
           },
           {
-            obscd: 'test_2_cd',
-            obsnm: 'test_2_name',
+            obscd: 'test_15_cd',
+            obsnm: 'test_15_name',
             mngorg: 'test_org',
             flood_warning: 'N',
             addr: 'test addr',
@@ -313,8 +320,8 @@ describe('CrawlingService', () => {
             planflood_level: null,
           },
           {
-            obscd: 'test_3_cd',
-            obsnm: 'test_3_name',
+            obscd: 'test_16_cd',
+            obsnm: 'test_16_name',
             mngorg: 'test_org',
             flood_warning: 'N',
             addr: 'test addr',
@@ -327,23 +334,23 @@ describe('CrawlingService', () => {
       };
       await crawlingService.setRivergauge(createBody);
 
-      expect(crawlingService.getOneRegistedGauges('test_1_cd')).toBeDefined();
-      expect(crawlingService.getOneRegistedGauges('test_2_cd')).toBeDefined();
-      expect(crawlingService.getOneRegistedGauges('test_3_cd')).toBeDefined();
+      expect(crawlingService.getOneRegistedGauges('test_14_cd')).toBeDefined();
+      expect(crawlingService.getOneRegistedGauges('test_15_cd')).toBeDefined();
+      expect(crawlingService.getOneRegistedGauges('test_16_cd')).toBeDefined();
 
       const updateBody: UpdateCrawlingRivergaugeBodyDTO = {
         data: [
           {
-            obscd: 'test_1_cd',
+            obscd: 'test_14_cd',
             addr: 'updated test addr',
           },
           {
-            obscd: 'test_2_cd',
+            obscd: 'test_15_cd',
             lon: '222-222-222',
             lat: '222-222-222',
           },
           {
-            obscd: 'test_3_cd',
+            obscd: 'test_16_cd',
             flood_warning: 'Y',
           },
         ],
@@ -353,14 +360,14 @@ describe('CrawlingService', () => {
       expect(result.status).toBe('Success');
       expect(result.requested).toBe(3);
       expect(result.processed).toBe(3);
-      expect(crawlingService.getOneRegistedGauges('test_1_cd').addr).toBe(
+      expect(crawlingService.getOneRegistedGauges('test_14_cd').addr).toBe(
         'updated test addr',
       );
-      expect(crawlingService.getOneRegistedGauges('test_2_cd').lon).toBe(
+      expect(crawlingService.getOneRegistedGauges('test_15_cd').lon).toBe(
         '222-222-222',
       );
       expect(
-        crawlingService.getOneRegistedGauges('test_3_cd').flood_warning,
+        crawlingService.getOneRegistedGauges('test_16_cd').flood_warning,
       ).toBe('Y');
     });
   });

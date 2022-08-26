@@ -10,6 +10,7 @@ import {
   riverlevel_gauge_tb,
   riverlevel_water_level_tb,
 } from '@prisma/client';
+import DBCache from 'src/lib/db-cache';
 
 @Injectable()
 export class CrawlingService {
@@ -17,6 +18,8 @@ export class CrawlingService {
 
   private registedGaugeCodes: string[];
   private registedGauges: riverlevel_gauge_tb[];
+  private registedRiverlevel: RiverLevels;
+  private dbCache: DBCache;
 
   async getRegistedGauges() {
     const gauges = await this.prismaService.riverlevel_gauge_tb.findMany();
@@ -28,17 +31,20 @@ export class CrawlingService {
     return this.registedGauges.filter((obs) => obs.obscd === obscd)[0];
   }
 
-  async initGauges() {
-    if (!this.registedGauges || this.registedGauges.length === 0) {
-      const { gauges, gaugeCodes } = await this.getRegistedGauges();
-      this.registedGauges = gauges;
-      this.registedGaugeCodes = gaugeCodes;
+  async initGauges(force = false) {
+    if (!this.dbCache || force) {
+      this.dbCache = await DBCache.getInstance();
+      this.registedGauges = this.dbCache.getRegistedRivergauge();
+      this.registedGaugeCodes = this.dbCache.getRegistedRivergaugeCode();
+      this.registedRiverlevel = this.dbCache.getRegistedRiverlevel();
     }
   }
 
   clearGauges() {
+    this.dbCache = null;
     this.registedGauges = [];
     this.registedGaugeCodes = [];
+    this.registedRiverlevel = {};
   }
 
   async setRiverlevel(body: CreateCrawlingRiverlevelBodyDTO) {

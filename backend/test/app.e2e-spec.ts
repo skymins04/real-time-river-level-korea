@@ -373,7 +373,7 @@ describe('AppController (e2e)', () => {
             .send({
               data: [
                 {
-                  obscd: 'e2etest_1',
+                  obscd: 'e2etest_4',
                   obsnm: 'test1',
                   mngorg: 'test',
                   addr: 'test addr',
@@ -384,7 +384,7 @@ describe('AppController (e2e)', () => {
                   gdt: null,
                 },
                 {
-                  obscd: 'e2etest_2',
+                  obscd: 'e2etest_5',
                   obsnm: 'test1',
                   mngorg: 'test',
                   addr: 'test addr',
@@ -395,7 +395,7 @@ describe('AppController (e2e)', () => {
                   gdt: null,
                 },
                 {
-                  obscd: 'e2etest_3',
+                  obscd: 'e2etest_6',
                   obsnm: 'test1',
                   mngorg: 'test',
                   addr: 'test addr',
@@ -414,23 +414,23 @@ describe('AppController (e2e)', () => {
             .send({
               data: [
                 {
-                  obscd: 'e2etest_1',
-                  addr: 'updated test addr',
-                },
-                {
-                  obscd: 'e2etest_2',
-                  addr: 'updated test addr',
-                },
-                {
-                  obscd: 'e2etest_3',
-                  addr: 'updated test addr',
-                },
-                {
-                  obscd: 'e2etest_3',
-                  addr: 'updated test addr',
-                },
-                {
                   obscd: 'e2etest_4',
+                  addr: 'updated test addr',
+                },
+                {
+                  obscd: 'e2etest_5',
+                  addr: 'updated test addr',
+                },
+                {
+                  obscd: 'e2etest_6',
+                  addr: 'updated test addr',
+                },
+                {
+                  obscd: 'e2etest_6',
+                  addr: 'updated test addr',
+                },
+                {
+                  obscd: 'e2etest_6',
                   addr: 'updated test addr',
                 },
               ],
