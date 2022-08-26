@@ -22,7 +22,7 @@ export class CrawlingService {
   private dbCache: DBCache;
 
   /**
-   * DB에 등록된 하천수위 관측소들의 관측소 코드들 중 특정 문자열로 시작되는 관측소 코드들을 반환하는 함수
+   * DB에 등록된 하천수위 관측소들의 관측소 코드들 중 특정 문자열로 시작되는 관측소 코드들을 반환하는 메서드
    * @param obscdStartWidth 하천수위 관측소 코드의 시작 문자열
    * @returns 특정 문자열로 시작되는 관측소 코드들
    */
@@ -33,7 +33,7 @@ export class CrawlingService {
   }
 
   /**
-   * DB에 등록된 하천수위 관측소등 중 특정 관측소 코드를 가진 하천수위 관측소의 객체를 반환하는 함수
+   * DB에 등록된 하천수위 관측소등 중 특정 관측소 코드를 가진 하천수위 관측소의 객체를 반환하는 메서드
    * @param obscd 하천수위 관측소 코드
    * @returns 특정 관측소 코드의 하천수위 관측소 객체
    */
@@ -42,7 +42,7 @@ export class CrawlingService {
   }
 
   /**
-   * DB에 등록된 특정 관측소 코드를 가진 하천수위 관측소 하나를 제거하는 함수
+   * DB에 등록된 특정 관측소 코드를 가진 하천수위 관측소 하나를 제거하는 메서드
    * 삭제될 하천수위 관측소의 하천수위 관측데이터들도 모두 제거된다.
    * @param obscd 하천수위 관측소 코드
    */
@@ -60,7 +60,7 @@ export class CrawlingService {
   }
 
   /**
-   * DB에 등록된 하천수위 관측소들 중 특정 문자열로 시작하는 관측소 코드를 가진 하천수위 관측소들을 모두 제거하는 함수
+   * DB에 등록된 하천수위 관측소들 중 특정 문자열로 시작하는 관측소 코드를 가진 하천수위 관측소들을 모두 제거하는 메서드
    * 삭제될 하천수위 관측소들의 하천수위 관측데이터들도 모두 제거된다.
    * @param obscdStartWith 하천수위 관측소 코드의 시작 문자열
    */
@@ -85,7 +85,7 @@ export class CrawlingService {
   }
 
   /**
-   * 특정 하천수위 관측 데이터를 제거하는 함수
+   * 특정 하천수위 관측 데이터를 제거하는 메서드
    * @param obscd 하천수위 관측소 코드
    * @param obsdate 하천수위 관측 일자
    */
@@ -104,7 +104,7 @@ export class CrawlingService {
   }
 
   /**
-   * 특정 하천수위 관측소의 모든 하천수위 관측 데이터들을 제거하는 함수
+   * 특정 하천수위 관측소의 모든 하천수위 관측 데이터들을 제거하는 메서드
    * @param obscd 하천수위 관측소 코드
    */
   async deleteManySpecificGaugeRiverlevel(obscd: string) {
@@ -122,7 +122,7 @@ export class CrawlingService {
   }
 
   /**
-   * 특정 문자열로 시작하는 관측소 코드의 하천수위 관측소의 모든 데이터를 제거하는 함수
+   * 특정 문자열로 시작하는 관측소 코드의 하천수위 관측소의 모든 데이터를 제거하는 메서드
    * @param obscdStartWith 하천수위 관측소의 시작 문자열
    */
   async deleteManyRiverlevel(obscdStartWith: string) {
@@ -136,7 +136,7 @@ export class CrawlingService {
   }
 
   /**
-   * DB 캐싱 객체에서 내부 필드로 하천수위 관측소들과 하천수위 관측 데이터를 가져오는 함수
+   * DB 캐싱 객체에서 내부 필드로 하천수위 관측소들과 하천수위 관측 데이터를 가져오는 메서드
    * 기본적으로 내부 필드 dhCache가 할당되지 않았을때만 실행됨.
    * force에 true를 대입하면 강제적으로 실행됨.
    * @param force 강제 초기화 실행 플래그
@@ -152,7 +152,7 @@ export class CrawlingService {
   }
 
   /**
-   * [POST] /crawling/riverlevel 엔드포인트의 서비스 함수
+   * [POST] /crawling/riverlevel 엔드포인트의 서비스 메서드
    * @param body post body
    * @returns 요청 결과
    */
@@ -203,7 +203,7 @@ export class CrawlingService {
   }
 
   /**
-   * [POST] /crawling/rivergauge 엔드포인트의 서비스 함수
+   * [POST] /crawling/rivergauge 엔드포인트의 서비스 메서드
    * @param body post body
    * @returns 요청 결과
    */
@@ -249,7 +249,7 @@ export class CrawlingService {
   }
 
   /**
-   * [PATCH] /crawling/rivergauge 엔드포인트의 서비스 함수
+   * [PATCH] /crawling/rivergauge 엔드포인트의 서비스 메서드
    * @param body post body
    * @returns 요청 결과
    */

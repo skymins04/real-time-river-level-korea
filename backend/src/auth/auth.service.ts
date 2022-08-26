@@ -13,6 +13,11 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
+  /**
+   * 허가된 토큰의 권한 정보를 포함한 Access Token과 Refresh Token을 발행하는 메서드
+   * @param role 토큰의 권한
+   * @returns 허가된 권한 정보를 포함한 Access Token과 Refresh Token
+   */
   private getJWTTokens = async (role) => {
     const access_token = await this.jwtService.sign(
       { role },
@@ -25,6 +30,11 @@ export class AuthService {
     return { access_token, refresh_token };
   };
 
+  /**
+   * [POST] /auth/register 엔드포인트의 서비스 메서드
+   * @param body post body
+   * @returns 요청 결과
+   */
   async register(body: AuthRegisterBodyDTO) {
     if (process.env['AUTH_ADMIN_SECRET_KEY'] === body.admin_key) {
       const apiKeySet = {
@@ -44,6 +54,11 @@ export class AuthService {
     throw new UnauthorizedException();
   }
 
+  /**
+   * [POST] /auth/signin 엔드포인트의 서비스 메서드
+   * @param body post body
+   * @returns 요청 결과
+   */
   async signin(body: AuthSigninBodyDTO) {
     const apiKeyRow = await this.prismaService.riverlevel_api_key_tb.findUnique(
       {
@@ -60,6 +75,11 @@ export class AuthService {
     throw new UnauthorizedException();
   }
 
+  /**
+   * [POST] /auth/refresh 엔드포인트의 서비스 메서드
+   * @param body post body
+   * @returns 요청 결과
+   */
   async refresh(body: AuthRefreshBodyDTO) {
     const decodedRefreshToken = this.jwtService.decode(body.refresh_token);
     return this.getJWTTokens(decodedRefreshToken['role']);
