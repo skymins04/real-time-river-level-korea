@@ -16,10 +16,10 @@
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest --config jest-unit.json",
     "test:watch": "jest --watch --config jest-unit.json",
-    "test:cov": "jest --watch --coverage --config jest-cov.json",
+    "test:cov": "jest --coverage --config jest-cov.json",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --watch --config ./test/jest-e2e.json",
-    "test:all": "jest --watch --config jest-cov.json"
+    "test:all": "jest --watch --coverage --config jest-cov.json"
   },
   "dependencies": {
     "@nestjs/common": "^9.0.0",
